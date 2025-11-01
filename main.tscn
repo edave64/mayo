@@ -1,0 +1,67 @@
+[gd_scene load_steps=11 format=3 uid="uid://crtaqejenyjcq"]
+
+[ext_resource type="Script" uid="uid://nagc7immjt45" path="res://camera_3d.gd" id="1_0xm2m"]
+[ext_resource type="Script" uid="uid://bbt8ki0knapam" path="res://plane_controller.gd" id="1_ig7tw"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7dm0k"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_ig7tw"]
+sky_material = SubResource("ProceduralSkyMaterial_7dm0k")
+
+[sub_resource type="Environment" id="Environment_0xm2m"]
+background_mode = 2
+sky = SubResource("Sky_ig7tw")
+tonemap_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7dm0k"]
+albedo_color = Color(1, 0.45882353, 0.3254902, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ig7tw"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ig7tw"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7dm0k"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ig7tw"]
+
+[node name="Main" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_0xm2m")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.8660254, -0.37040234, 0.3358603, 0, 0.67172056, 0.7408046, -0.50000006, 0.6415556, -0.5817271, 0, 0, 0)
+shadow_enabled = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.015240192, 0.001956284, 0)
+use_collision = true
+size = Vector3(125, 1, 76)
+material = SubResource("StandardMaterial3D_7dm0k")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, -7, 4, 0)
+script = ExtResource("1_0xm2m")
+
+[node name="Plane" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9, 0)
+script = ExtResource("1_ig7tw")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Plane"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2409902, 0)
+mesh = SubResource("BoxMesh_ig7tw")
+skeleton = NodePath("")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Plane"]
+transform = Transform3D(-4.926084e-15, 4.371137e-09, 3, 2.9999998, -4.3711363e-09, 0, 1.3113414e-07, 0.09999996, -1.3113416e-07, 0.099999964, 1.1999998, -1)
+mesh = SubResource("CylinderMesh_ig7tw")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Plane"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2409897, 0)
+shape = SubResource("BoxShape3D_7dm0k")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Plane"]
+transform = Transform3D(1.9106854e-16, 4.371139e-09, 0.1, 0.1, -4.371139e-09, 0, 4.371139e-09, 0.1, -4.371139e-09, 0.1, 1.1999998, -1)
+shape = SubResource("CylinderShape3D_ig7tw")

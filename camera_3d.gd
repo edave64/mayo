@@ -1,0 +1,16 @@
+extends Camera3D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	var plane = get_node("../Plane")
+	position = plane.get_position()
+	position.z += 2
+	position.y += 3
+	rotation.x = -0.3
+	pass

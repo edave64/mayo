@@ -10,7 +10,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	var plane = get_node("../Plane")
 	position = plane.get_position()
-	position.z += 2
-	position.y += 3
+	position.z += 8
+	position.y += 4
 	rotation.x = -0.3
 	pass

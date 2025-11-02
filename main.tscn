@@ -1,7 +1,7 @@
-[gd_scene load_steps=12 format=3 uid="uid://crtaqejenyjcq"]
+[gd_scene load_steps=10 format=3 uid="uid://crtaqejenyjcq"]
 
 [ext_resource type="Script" uid="uid://nagc7immjt45" path="res://camera_3d.gd" id="1_0xm2m"]
-[ext_resource type="Script" uid="uid://bbt8ki0knapam" path="res://plane_controller.gd" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://cyuj0oevec11g" path="res://plane/plane.tscn" id="2_0xm2m"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7dm0k"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -15,19 +15,20 @@ background_mode = 2
 sky = SubResource("Sky_ig7tw")
 tonemap_mode = 2
 
+[sub_resource type="Gradient" id="Gradient_0xm2m"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_h2yge"]
+noise_type = 0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_1bvp3"]
+width = 2048
+height = 2048
+noise = SubResource("FastNoiseLite_h2yge")
+color_ramp = SubResource("Gradient_0xm2m")
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7dm0k"]
-albedo_color = Color(1, 0.45882353, 0.3254902, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_ig7tw"]
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_ig7tw"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_7dm0k"]
-size = Vector3(3, 3, 6.1)
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_0xm2m"]
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_h2yge"]
+albedo_color = Color(0.85617673, 0.5641062, 0.44603372, 1)
+albedo_texture = SubResource("NoiseTexture2D_1bvp3")
 
 [node name="Main" type="Node3D"]
 
@@ -39,62 +40,13 @@ transform = Transform3D(-0.8660254, -0.37040234, 0.3358603, 0, 0.67172056, 0.740
 shadow_enabled = true
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.015240192, 0.001956284, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.484756, 0.001956284, 0.5)
 use_collision = true
-size = Vector3(125, 1, 76)
+size = Vector3(574, 1, 639)
 material = SubResource("StandardMaterial3D_7dm0k")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, -7, 4, 0)
 script = ExtResource("1_0xm2m")
 
-[node name="Plane" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9, 0)
-script = ExtResource("1_ig7tw")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Plane"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 6, 0, 1.2409897, 2)
-mesh = SubResource("BoxMesh_ig7tw")
-skeleton = NodePath("")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Plane"]
-transform = Transform3D(-4.926084e-15, 4.371137e-09, 3, 2.9999998, -4.3711363e-09, 0, 1.3113414e-07, 0.09999996, -1.3113416e-07, 0.099999964, 1.1999998, -1)
-mesh = SubResource("CylinderMesh_ig7tw")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Plane"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2409897, 1.95)
-shape = SubResource("BoxShape3D_7dm0k")
-
-[node name="Node3D3" type="Node3D" parent="Plane"]
-transform = Transform3D(1, 0, -1.7484555e-07, 0, 1, 0, 1.7484555e-07, 0, 1, 0, 0, 0)
-
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="Plane/Node3D3"]
-transform = Transform3D(0.09999996, -2.9802314e-08, 1.6381669e-09, -7.450581e-09, 0.7, -7.38929e-09, -1.6381652e-09, 5.1725046e-08, 0.099999964, 8.4640965e-07, 0.5, 4.5)
-mesh = SubResource("CylinderMesh_0xm2m")
-
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="Plane/Node3D3"]
-transform = Transform3D(-2.1855692e-08, -0.099999964, 0, 0.49999997, -4.3711372e-09, 0, 0, 0, 0.5, 7.86805e-07, 0, 4.5)
-mesh = SubResource("CylinderMesh_h2yge")
-
-[node name="Node3D" type="Node3D" parent="Plane"]
-
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="Plane/Node3D"]
-transform = Transform3D(0.09063074, 0.29583275, 0, -0.042261817, 0.63441545, 0, 0, 0, 0.099999964, -0.59999996, 0.5, 0)
-mesh = SubResource("CylinderMesh_0xm2m")
-skeleton = NodePath("../..")
-
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="Plane/Node3D"]
-transform = Transform3D(-2.1855692e-08, -0.099999964, 0, 0.49999997, -4.3711372e-09, 0, 0, 0, 0.5, -0.90000004, 0, 0)
-mesh = SubResource("CylinderMesh_h2yge")
-skeleton = NodePath("../..")
-
-[node name="Node3D2" type="Node3D" parent="Plane"]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0, 0)
-
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="Plane/Node3D2"]
-transform = Transform3D(0.09063074, 0.29583275, 0, -0.042261817, 0.63441545, 0, 0, 0, 0.099999964, -0.59999996, 0.5, 0)
-mesh = SubResource("CylinderMesh_0xm2m")
-
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="Plane/Node3D2"]
-transform = Transform3D(-2.1855692e-08, -0.099999964, 0, 0.49999997, -4.3711372e-09, 0, 0, 0, 0.5, -0.90000004, 0, 0)
-mesh = SubResource("CylinderMesh_h2yge")
+[node name="Plane" parent="." instance=ExtResource("2_0xm2m")]

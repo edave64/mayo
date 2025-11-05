@@ -1,7 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://crtaqejenyjcq"]
+[gd_scene load_steps=12 format=3 uid="uid://crtaqejenyjcq"]
 
 [ext_resource type="Script" uid="uid://nagc7immjt45" path="res://camera_3d.gd" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://cyuj0oevec11g" path="res://plane/plane.tscn" id="2_0xm2m"]
+[ext_resource type="Theme" uid="uid://bgidmmif74xcc" path="res://debug_theme.tres" id="3_1bvp3"]
+[ext_resource type="Script" uid="uid://dimpqxhlprauo" path="res://debug_panel.gd" id="4_lquwl"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7dm0k"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -42,7 +44,7 @@ shadow_enabled = true
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.484756, 0.001956284, 0.5)
 use_collision = true
-size = Vector3(574, 1, 639)
+size = Vector3(1313, 1, 1279.7001)
 material = SubResource("StandardMaterial3D_7dm0k")
 
 [node name="Camera3D" type="Camera3D" parent="."]
@@ -50,3 +52,26 @@ transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.965
 script = ExtResource("1_0xm2m")
 
 [node name="Plane" parent="." instance=ExtResource("2_0xm2m")]
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="DebugPanel" type="PanelContainer" parent="UI"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 210.0
+offset_bottom = 50.0
+theme = ExtResource("3_1bvp3")
+script = ExtResource("4_lquwl")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/DebugPanel"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/DebugPanel/MarginContainer"]
+layout_mode = 2

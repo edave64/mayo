@@ -1,7 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://cyuj0oevec11g"]
+[gd_scene load_steps=9 format=3 uid="uid://cyuj0oevec11g"]
 
 [ext_resource type="Script" uid="uid://bbt8ki0knapam" path="res://plane/plane_controller.gd" id="1_r6b4u"]
 [ext_resource type="PackedScene" uid="uid://rdufu272eaqv" path="res://plane/plane.blend" id="2_peqmt"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_peqmt"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7dm0k"]
 size = Vector3(3, 3, 6.1)
@@ -14,7 +16,9 @@ size = Vector3(3, 3, 6.1)
 
 [sub_resource type="Skin" id="Skin_jaatl"]
 
-[node name="Plane" type="CharacterBody3D"]
+[node name="Plane" type="RigidBody3D"]
+mass = 500.0
+physics_material_override = SubResource("PhysicsMaterial_peqmt")
 script = ExtResource("1_r6b4u")
 
 [node name="plane" parent="." instance=ExtResource("2_peqmt")]

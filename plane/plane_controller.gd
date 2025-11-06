@@ -1,4 +1,4 @@
-extends CharacterBody3D
+extends RigidBody3D
 
 const SPEED = 80
 const SPEED_DECAY = 20
@@ -24,14 +24,14 @@ var propSpeed = 0;
 
 func resetToBase() -> void:
 	position = Vector3(initPos)
-	velocity = Vector3.ZERO
+	linear_velocity = Vector3.ZERO
+	angular_velocity = Vector3.ZERO
 	rotation = Vector3.ZERO
 
 func _physics_process(delta: float) -> void:
 	if position.y < -10:
 		resetToBase()
 
-	var vy = velocity.y
 	#velocity = velocity.move_toward(Vector3.ZERO, delta * SPEED_DECAY)
 	
 	var propInput = Input.get_axis("ui_text_backspace", "ui_accept")
@@ -45,18 +45,21 @@ func _physics_process(delta: float) -> void:
 	
 	prop.rotation.z = fmod(prop.rotation.z + propSpeed * delta, PI);
 	
-	var targetForwardVelocity = propSpeed * delta;
-	velocity = lerp(velocity, -transform.basis.z * targetForwardVelocity * SPEED, delta)
+	var targetForwardVelocity = propSpeed;
+	print(Vector3.FORWARD * targetForwardVelocity* MASS)
+	apply_central_force(get_global_transform_interpolated().basis * Vector3.FORWARD * targetForwardVelocity* 200)
+	#velocity = lerp(velocity, -transform.basis.z * targetForwardVelocity * SPEED, delta)
 	
 	var elevatorInput = Input.get_axis("ui_up", "ui_down")
 	
 	var aleronInput = Input.get_axis("ui_right", "ui_left")
-	rotate_y(TURN_SPEED * aleronInput * delta)
-	rotation.z += aleronInput * delta;
+	rotate_object_local(Vector3.UP, aleronInput * delta)
+	rotate_object_local(Vector3.BACK, aleronInput * delta * 1.5)
+	#rotate_y(TURN_SPEED * aleronInput * delta)
 
 	orient_hind_wheel()
 	
-	var horizontal_vel = Vector3(velocity.x, 0, velocity.z).length();
+	var horizontal_vel = Vector3(linear_velocity.x, 0, linear_velocity.z).length();
 	
 	var CL = get_coefficient_of_lift(rotation.x)
 	
@@ -69,33 +72,29 @@ func _physics_process(delta: float) -> void:
 	
 	var lift = CL * r * (horizontal_vel * horizontal_vel / 2) * A
 	var weight = MASS * 9.80665
+		
+	apply_central_force(Vector3.MODEL_TOP * lift)
 	
-	var liftAccel = lift / MASS
-	
-	velocity.y += liftAccel * delta
-	
-	rotation.x += elevatorInput * delta
-	
-	
-	#vy += elevatorInput * delta * 20
-	#velocity.y = vy
+	rotate_object_local(Vector3.RIGHT, elevatorInput * delta)
+	#rotation.x = fmod(rotation.x + PI + elevatorInput * delta, 2 * PI) - PI
 	
 	if debugPanel.visible:
 		debugPanel.add_debug_property('Position', "%.2f, %.2f, %.2f" % [position.x, position.y, position.z])
-		debugPanel.add_debug_property('Velocity', "%.2f, %.2f, %.2f" % [velocity.x, velocity.y, velocity.z])
+		debugPanel.add_debug_property('Linear Velocity', "%.2f, %.2f, %.2f" % [linear_velocity.x, linear_velocity.y, linear_velocity.z])
+		debugPanel.add_debug_property('Rotation', "%.2f, %.2f, %.2f" % [rotation.x, rotation.y, rotation.z])
 		debugPanel.add_debug_property('H-speed', "%.2f" % horizontal_vel)
 		debugPanel.add_debug_property('Prop speed', "%.2f" % propSpeed)
 		debugPanel.add_debug_property('Lift coefficient', "%.2f" % CL)
 		debugPanel.add_debug_property('Lift', "%.2f N" % lift)
-		debugPanel.add_debug_property('Lift Accell', "%.2f N" % liftAccel)
+		#debugPanel.add_debug_property('Lift Accell', "%.2f N" % liftAccel)
 		debugPanel.add_debug_property('Weight', "%.2f N" % weight)
 	
 	# Add the gravity.
-	if not is_on_floor():
-		velocity += get_gravity() * delta
-		debugPanel.add_debug_property('Gravity', "%.2f, %.2f, %.2f" % [velocity.x, velocity.y, velocity.z])
+	#if not is_on_floor():
+	#	velocity += get_gravity() * delta
+	#	debugPanel.add_debug_property('Gravity', "%.2f, %.2f, %.2f" % [velocity.x, velocity.y, velocity.z])
 	
-	move_and_slide()
+	#move_and_slide()
 
 func get_coefficient_of_lift(angle_of_attack: float) -> float:
 	if angle_of_attack < -0.02:
@@ -115,8 +114,8 @@ func get_coefficient_of_lift(angle_of_attack: float) -> float:
 # Should orient the hind wheel in the direction of the velocity, rather than the
 # current orientation.
 func orient_hind_wheel() -> void:
-	if !velocity.is_zero_approx():
-		var vel = velocity
+	if !linear_velocity.is_zero_approx():
+		var vel = linear_velocity
 		# Convert world velocity to the plane's local space
 		var local_vel = global_transform.basis.inverse() * vel
 		# Flatten to XZ plane

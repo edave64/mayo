@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://cyuj0oevec11g"]
+[gd_scene load_steps=10 format=3 uid="uid://cyuj0oevec11g"]
 
 [ext_resource type="Script" uid="uid://bbt8ki0knapam" path="res://plane/plane_controller.gd" id="1_r6b4u"]
 [ext_resource type="PackedScene" uid="uid://rdufu272eaqv" path="res://plane/plane.blend" id="2_peqmt"]
+[ext_resource type="Script" uid="uid://bfwhygtu0dg7v" path="res://plane/surface.gd" id="3_jaatl"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_peqmt"]
 
@@ -66,3 +67,21 @@ mesh = SubResource("CylinderMesh_h2yge")
 transform = Transform3D(0.19999999, 0, 0, 0, 1.9696153, -0.008682411, 0, 0.34729633, 0.0492404, 0, 2, -2.5)
 mesh = SubResource("BoxMesh_peqmt")
 skin = SubResource("Skin_jaatl")
+
+[node name="LeftWing" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.25881904, 0, 0.25881904, 0.9659258, 4, 2.8, 0)
+script = ExtResource("3_jaatl")
+width = 10
+
+[node name="RightWing" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.25881904, 0, 0.25881904, 0.9659258, -4, 2.8, 0)
+script = ExtResource("3_jaatl")
+width = 10
+
+[node name="Elevators" type="Marker3D" parent="."]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.9659258, -0.258819, 0, 0.25881904, 0.96592575, 0, 1.4, 5.7)
+script = ExtResource("3_jaatl")
+width = 10
+
+[node name="Rudder" type="Marker3D" parent="."]
+transform = Transform3D(-4.371139e-08, -1, 0, 0.8660254, -3.7855173e-08, -0.5, 0.5, -2.1855694e-08, 0.8660254, 0, 2.4, 5.7)

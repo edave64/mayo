@@ -46,48 +46,14 @@ func _physics_process(delta: float) -> void:
 	prop.rotation.z = fmod(prop.rotation.z + propSpeed * delta, PI);
 	
 	var targetForwardVelocity = propSpeed;
-	print(Vector3.FORWARD * targetForwardVelocity* MASS)
 	apply_central_force(get_global_transform_interpolated().basis * Vector3.FORWARD * targetForwardVelocity* 200)
-	#velocity = lerp(velocity, -transform.basis.z * targetForwardVelocity * SPEED, delta)
-	
-	var elevatorInput = Input.get_axis("ui_up", "ui_down")
-	
-	var aleronInput = Input.get_axis("ui_right", "ui_left")
-	rotate_object_local(Vector3.UP, aleronInput * delta)
-	rotate_object_local(Vector3.BACK, aleronInput * delta * 1.5)
-	#rotate_y(TURN_SPEED * aleronInput * delta)
-
-	orient_hind_wheel()
-	
-	var horizontal_vel = Vector3(linear_velocity.x, 0, linear_velocity.z).length();
-	
-	var CL = get_coefficient_of_lift(rotation.x)
-	
-	
-	# Area of the wing. Randomly guessed
-	const A = 2
-	
-	# Density of air. Maybe decrese with height
-	const r = 1.205
-	
-	var lift = CL * r * (horizontal_vel * horizontal_vel / 2) * A
-	var weight = MASS * 9.80665
-		
-	apply_central_force(Vector3.MODEL_TOP * lift)
-	
-	rotate_object_local(Vector3.RIGHT, elevatorInput * delta)
-	#rotation.x = fmod(rotation.x + PI + elevatorInput * delta, 2 * PI) - PI
 	
 	if debugPanel.visible:
 		debugPanel.add_debug_property('Position', "%.2f, %.2f, %.2f" % [position.x, position.y, position.z])
 		debugPanel.add_debug_property('Linear Velocity', "%.2f, %.2f, %.2f" % [linear_velocity.x, linear_velocity.y, linear_velocity.z])
 		debugPanel.add_debug_property('Rotation', "%.2f, %.2f, %.2f" % [rotation.x, rotation.y, rotation.z])
-		debugPanel.add_debug_property('H-speed', "%.2f" % horizontal_vel)
 		debugPanel.add_debug_property('Prop speed', "%.2f" % propSpeed)
-		debugPanel.add_debug_property('Lift coefficient', "%.2f" % CL)
-		debugPanel.add_debug_property('Lift', "%.2f N" % lift)
 		#debugPanel.add_debug_property('Lift Accell', "%.2f N" % liftAccel)
-		debugPanel.add_debug_property('Weight', "%.2f N" % weight)
 	
 	# Add the gravity.
 	#if not is_on_floor():

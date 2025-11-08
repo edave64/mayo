@@ -1,3 +1,5 @@
+class_name MayoPlane
+
 extends RigidBody3D
 
 const SPEED = 80
@@ -21,6 +23,11 @@ var prop = $prop
 var initPos = Vector3(position)
 
 var propSpeed = 0;
+
+var lastLinearVelocity = Vector3.ZERO
+var lastAngularVelocity = Vector3.ZERO
+var lastPosition = Vector3.ZERO
+var lastRotation = Vector3.ZERO
 
 func resetToBase() -> void:
 	position = Vector3(initPos)
@@ -54,6 +61,11 @@ func _physics_process(delta: float) -> void:
 		debugPanel.add_debug_property('Rotation', "%.2f, %.2f, %.2f" % [rotation.x, rotation.y, rotation.z])
 		debugPanel.add_debug_property('Prop speed', "%.2f" % propSpeed)
 		#debugPanel.add_debug_property('Lift Accell', "%.2f N" % liftAccel)
+	
+	lastAngularVelocity = Vector3(angular_velocity)
+	lastLinearVelocity = Vector3(linear_velocity)
+	lastPosition = Vector3(position)
+	lastRotation = Vector3(rotation)
 	
 	# Add the gravity.
 	#if not is_on_floor():

@@ -4,45 +4,48 @@ extends Marker3D
 @export_custom(PROPERTY_HINT_NONE, "suffix:m") var width: int = 5
 @export_custom(PROPERTY_HINT_NONE, "suffix:m²") var area: int = 2
 
-
-@export_range(-180, 180, 0.001, "radians_as_degrees") var low_stall_angle: int = -30
-@export_range(-180, 180, 0.001, "radians_as_degrees") var high_stall_angle: int = 30
+@export_range(-180, 180, 0.001, "radians_as_degrees") var low_stall_angle: float
+@export_range(-180, 180, 0.001, "radians_as_degrees") var max_lift_angle: float
+@export_range(-180, 180, 0.001, "radians_as_degrees") var high_stall_angle: float
 @export var maximum_lift: int = 1
-const airDensity = 1.205
+const AirDensity = 1.205
 
 @onready
 var debugPanel = $/root/Main/UI/DebugPanel
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	var plane = get_parent() as RigidBody3D
+	var plane = get_parent() as MayoPlane
 
-	var rel_pos = position - plane.center_of_mass
-
-	var worldFlowVelocity = plane.linear_velocity - plane.angular_velocity.cross(rel_pos) # + wind
+	var worldFlowVelocity = plane.lastLinearVelocity
 	if worldFlowVelocity.is_zero_approx():
 		return
-		
-	var localFlowVelocity = transform.basis * worldFlowVelocity
 	
-	var dynamicPressure = 0.5 * airDensity * localFlowVelocity.length_squared()
-	var angleOfAttack = atan2(localFlowVelocity.y, -localFlowVelocity.x)
+	var relative_air_velocity = transform.basis * worldFlowVelocity
+
+	var pressure = 0.5 * AirDensity * relative_air_velocity.length_squared()
+	var angle_of_attack = plane.rotation.x
 	
-	var dragDirection = transform * localFlowVelocity.normalized()
-	var forward = transform * Vector3.FORWARD
-	var liftDirection = dragDirection.cross(forward)
+	print(angle_of_attack)
+
+	#var dragDirection = transform.basis * localFlowVelocity.normalized()
+	var lift_direction = transform.basis * Vector3.UP
 	
-	var lift = liftDirection * lift_coefficient(angleOfAttack) * dynamicPressure * area;
-	
-	debugPanel.add_debug_property(name + " lift", "%.2f" % lift.length())
-	debugPanel.add_debug_property(name + ' velocity', "%.2f, %.2f, %.2f" % [localFlowVelocity.x, localFlowVelocity.y, localFlowVelocity.z])
-	
-	if lift.length() > 30000:
+	var lift = lift_direction * lift_coefficient(angle_of_attack) * pressure * area;
+
+	if lift.length() > 300000:
 		return
-	
-	debugPanel.add_debug_property(name + ' velocity', "%.2f, %.2f, %.2f" % [localFlowVelocity.x, localFlowVelocity.y, localFlowVelocity.z])
-	debugPanel.add_debug_property(name + ' ldir', "%.2f, %.2f, %.2f" % [liftDirection.x, liftDirection.y, liftDirection.z])
-	plane.apply_force(lift * delta, Vector3.UP * transform)
+
+	var force = lift * delta * 30
+	print(lift_coefficient(angle_of_attack))
+	plane.apply_force(force, position)
 
 func lift_coefficient(angle_of_attack: float) -> float:
-	return maximum_lift
+	if angle_of_attack > high_stall_angle:
+		return 0
+	
+	if angle_of_attack < low_stall_angle:
+		return 0
+	
+	return -pow(angle_of_attack - max_lift_angle, 2) + maximum_lift
+	

@@ -1,8 +1,9 @@
-[gd_scene load_steps=12 format=3 uid="uid://crtaqejenyjcq"]
+[gd_scene load_steps=13 format=3 uid="uid://crtaqejenyjcq"]
 
 [ext_resource type="Script" uid="uid://nagc7immjt45" path="res://camera_3d.gd" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://cyuj0oevec11g" path="res://plane/plane.tscn" id="2_0xm2m"]
 [ext_resource type="Theme" uid="uid://bgidmmif74xcc" path="res://debug_theme.tres" id="3_1bvp3"]
+[ext_resource type="Script" uid="uid://dtue03wni7wfg" path="res://plane/plane.gd" id="3_lquwl"]
 [ext_resource type="Script" uid="uid://dimpqxhlprauo" path="res://debug_panel.gd" id="4_lquwl"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7dm0k"]
@@ -52,6 +53,14 @@ transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.965
 script = ExtResource("1_0xm2m")
 
 [node name="Plane" parent="." instance=ExtResource("2_0xm2m")]
+center_of_mass = Vector3(0, 1.58, 0.7)
+can_sleep = false
+script = ExtResource("3_lquwl")
+show_debug = false
+show_wing_debug_vectors = true
+show_torque = true
+show_drag_vectors = true
+show_angular_velocity = true
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3

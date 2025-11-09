@@ -15,7 +15,13 @@ func _process(delta: float) -> void:
 	if !visible:
 		return
 	
-	fpsProp.text = 'FPS: ' + "%.2f" % (1.0 / delta);
+	fpsProp.text = 'FPS: ' + "%.2f" % (1.0 / delta)
+	add_debug_property("throttle", 'on' if Input.is_action_pressed("plane_throttle") else 'off')
+	add_debug_property("break", 'on' if Input.is_action_pressed("plane_break") else 'off')
+	add_debug_property("left", 'on' if Input.is_action_pressed("vehicle_left") else 'off')
+	add_debug_property("right", 'on' if Input.is_action_pressed("vehicle_right") else 'off')
+	add_debug_property("up", 'on' if Input.is_action_pressed("vehicle_up") else 'off')
+	add_debug_property("down", 'on' if Input.is_action_pressed("vehicle_down") else 'off')
 
 @onready
 var property_container = $MarginContainer/VBoxContainer

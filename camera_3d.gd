@@ -1,5 +1,7 @@
 extends Camera3D
 
+@export var tracking: Node3D
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -8,9 +10,6 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	var plane = get_node("../Plane")
-	position = plane.get_position()
-	position.z += 10
-	position.y += 4
-	rotation.x = -0.3
+	var offset = Vector3(-0.3, 4, 10)
+	position = tracking.get_position() + offset
 	pass

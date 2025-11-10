@@ -9,4 +9,3 @@ func _process(delta: float) -> void:
 	$plane/AeleronR.rotation.x = -0.1 * Input.get_axis('vehicle_left', 'vehicle_right')
 	$plane/Rudder.rotation.y = -0.01 * Input.get_axis('vehicle_left', 'vehicle_right')
 	$plane/Elevator.rotation.x = -0.02 * Input.get_axis('vehicle_up', 'vehicle_down')
-	

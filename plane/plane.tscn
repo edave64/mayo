@@ -83,8 +83,8 @@ axis_flip_x = 1
 [sub_resource type="Resource" id="Resource_12kbe"]
 script = ExtResource("8_hy5e4")
 axis_configs = Array[ExtResource("7_drk06")]([SubResource("Resource_xw1vv")])
-max_value = Vector3(1, 0, 0)
-min_value = Vector3(-1, 0, 0)
+max_value = Vector3(0.1, 0, 0)
+min_value = Vector3(-0.1, 0, 0)
 metadata/_custom_type_script = "uid://cblxodmmwvpt6"
 
 [sub_resource type="Curve" id="Curve_uciay"]
@@ -127,9 +127,9 @@ aspect_ratio = 8.465776293823039
 
 [sub_resource type="Resource" id="Resource_lcyg8"]
 script = ExtResource("4_h2q6m")
-chord = 0.46
-span = 4.515
-area = 2.0768999999999997
+chord = 0.46000000000000013
+span = 4.515000000000001
+area = 2.0769000000000006
 aspect_ratio = 9.815217391304346
 
 [sub_resource type="Resource" id="Resource_0ambj"]

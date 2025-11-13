@@ -10,7 +10,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	var offset = Vector3(-0.3, 300, 10)
+	var offset = Vector3(-0.3, 500, 10)
 	position = tracking.get_position() + offset
 	look_at(tracking.get_position())
 	pass

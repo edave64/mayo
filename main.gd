@@ -12,6 +12,6 @@ func _process(delta: float) -> void:
 		Input.get_axis("vehicle_left", "vehicle_right"),
 		Input.get_axis("plane_break", "plane_throttle") * 50,
 		Input.get_axis("vehicle_up", "vehicle_down"),
-	)  * delta * 2000
+	)  * delta * 20000
 
 	$Camera3D.tracking.apply_force(force)

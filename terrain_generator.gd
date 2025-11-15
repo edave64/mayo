@@ -52,6 +52,9 @@ const size := 256.0
 		height = new_height
 		invalidate_all_chunks()
 
+var single_thread_mode = false
+var single_tread_task: WorldGenTask
+
 func _ready() -> void:
 	chunk_meshes = [
 		get_node('TerrainTL'),
@@ -67,8 +70,12 @@ func _ready() -> void:
 	
 	task_by_chunk_mesh.resize(chunk_meshes.size())
 	
+	var thread_started = false
+	
 	for thread in thread_pool:
-		thread.start(worker)
+		thread_started = thread_started || thread.start(worker)
+	
+	single_thread_mode = not thread_started
 
 func _process(_delta: float) -> void:
 	if not tracking: return
@@ -76,17 +83,44 @@ func _process(_delta: float) -> void:
 	var current_x = int(round(tracking.position.x / size))
 	var current_y = int(round(tracking.position.z / size))
 	
-	# Step 1: Realize finished tasks
-	if finished_tasks_mutex.try_lock():
-		while finished_tasks.size() > 0:
-			finished_tasks.pop_back().realize_in_main()
-		finished_tasks_mutex.unlock()
 	
-	# Step 2: Find the chunks that need to be generated
-	for x in range(-1, 2):
-		for y in range(-1, 2):
-			if x == 0 && y == 0: continue
-			queue_chunk_load_if_needed(current_x + x, current_y + y)
+	if single_thread_mode:
+		# In single thread mode: Render each chunk across 3 frames
+		if not single_tread_task:
+			# Step 1: Find an open task to work on
+			for x in range(current_x - 1, current_x + 2):
+				for y in range(current_y - 1, current_y + 2):
+					if x == current_x && y == current_y: continue
+					
+					if not is_chunk_active(x, y):
+						single_tread_task = WorldGenTask.new(self, x, y)
+						task_by_chunk_mesh[get_chunk_mesh_idx(x, y)] = single_tread_task
+						break
+				# Break both loops if a task is ready
+				if single_tread_task: break
+		else:
+			# Step 2: Generate the chunk spread across 3 frames.
+			if not single_tread_task.array_mesh:
+				single_tread_task.generate_mesh()
+			elif single_tread_task.height_map_data.size() == 0:
+				single_tread_task.generate_height_map()
+				single_tread_task.completed = true
+			else:
+				single_tread_task.realize_in_main()
+				single_tread_task = null
+	else:
+		# Step 1: Realize finished tasks
+		if finished_tasks_mutex.try_lock():
+			while finished_tasks.size() > 0:
+				finished_tasks.pop_back().realize_in_main()
+			finished_tasks_mutex.unlock()
+			
+		# Step 2: Find the chunks that need to be generated
+		for x in range(-1, 2):
+			for y in range(-1, 2):
+				if x == 0 && y == 0: continue
+				
+				queue_chunk_load_if_needed(current_x + x, current_y + y)
 	
 	# Step 3: IF the current chunk is not yet finished, block until it is
 	block_until_loaded(current_x, current_y)

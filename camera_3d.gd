@@ -10,7 +10,8 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	var offset = Vector3(-0.3, 500, 10)
+	var offset = Vector3(-0.3, 3, 10)
 	position = tracking.get_position() + offset
+	position.y = max(position.y, %TerrainGenerator.get_height(position) + 3)
 	look_at(tracking.get_position())
 	pass

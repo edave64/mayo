@@ -1,0 +1,114 @@
+[gd_scene load_steps=9 format=3 uid="uid://civ2iemgb6ums"]
+
+[ext_resource type="Script" uid="uid://bbxd3xlf683rw" path="res://car/car.gd" id="1_2gitb"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dxy33"]
+albedo_color = Color(0.14406255, 0.14406255, 0.14406255, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_33qfd"]
+material = SubResource("StandardMaterial3D_dxy33")
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2gitb"]
+metallic = 1.0
+roughness = 0.4
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_2gitb"]
+material = SubResource("StandardMaterial3D_2gitb")
+top_radius = 0.4
+bottom_radius = 0.4
+height = 0.3
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_33qfd"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_2gitb")
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2gitb"]
+radius = 0.7
+height = 3.95
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2gitb"]
+size = Vector3(1.7, 0.5, 2.8)
+
+[node name="Car" type="VehicleBody3D"]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+disable_mode = 2
+mass = 500.0
+center_of_mass_mode = 1
+center_of_mass = Vector3(0, 0.5, 0)
+can_sleep = false
+script = ExtResource("1_2gitb")
+max_steer = 0.5
+engine_power = 1500
+
+[node name="WheelFL" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0.5, 1.4)
+use_as_steering = true
+suspension_stiffness = 30.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WheelFL"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_33qfd")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="WheelFL"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_2gitb")
+
+[node name="WheelFR" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0.5, 1.4)
+use_as_steering = true
+suspension_stiffness = 30.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WheelFR"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_33qfd")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="WheelFR"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_2gitb")
+
+[node name="WheelBL" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0.5, -1.4)
+use_as_traction = true
+suspension_stiffness = 30.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WheelBL"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_33qfd")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="WheelBL"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_2gitb")
+
+[node name="WheelBR" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0.5, -1.4)
+use_as_traction = true
+suspension_stiffness = 30.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WheelBR"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_33qfd")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="WheelBR"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_2gitb")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.7, 0, 0, 0, -8.305164e-08, -0.99999994, 0, 1.9000001, -4.3711385e-08, 0, 1.2525, 0)
+mesh = SubResource("CapsuleMesh_33qfd")
+skeleton = NodePath("")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 8.742278e-08, 8.742278e-08, -8.742278e-08, -4.371139e-08, 1, 8.742278e-08, -1, -4.371138e-08, -2.1855673e-09, 1.3050001, 0.024999976)
+shape = SubResource("CapsuleShape3D_2gitb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04999998, 0.8499999, 0.10000009)
+shape = SubResource("BoxShape3D_2gitb")
+
+[node name="ReflectionProbe" type="ReflectionProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+intensity = 0.45
+box_projection = true
+mesh_lod_threshold = 0.0
+ambient_mode = 0

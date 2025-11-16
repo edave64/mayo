@@ -52,6 +52,9 @@ const size := 256.0
 		height = new_height
 		invalidate_all_chunks()
 
+func get_height(pos: Vector3) -> float:
+	return noise.get_noise_2d(pos.x, pos.z) * height
+
 var single_thread_mode = false
 var single_tread_task: WorldGenTask
 

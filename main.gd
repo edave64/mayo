@@ -8,10 +8,11 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	var force = Vector3(
-		Input.get_axis("vehicle_left", "vehicle_right"),
-		Input.get_axis("plane_break", "plane_throttle") * 50,
-		Input.get_axis("vehicle_up", "vehicle_down"),
-	)  * delta * 20000
-
-	$Camera3D.tracking.apply_force(force)
+	pass
+	#var force = Vector3(
+	#	Input.get_axis("vehicle_left", "vehicle_right"),
+	#	Input.get_axis("plane_break", "plane_throttle") * 50,
+	#	Input.get_axis("vehicle_up", "vehicle_down"),
+	#)  * delta * 20000
+	#
+	#$Camera3D.tracking.apply_force(force)

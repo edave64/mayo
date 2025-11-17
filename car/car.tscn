@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://civ2iemgb6ums"]
+[gd_scene load_steps=8 format=3 uid="uid://civ2iemgb6ums"]
 
 [ext_resource type="Script" uid="uid://bbxd3xlf683rw" path="res://car/car.gd" id="1_2gitb"]
 
@@ -11,7 +11,7 @@ height = 0.2
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2gitb"]
 metallic = 1.0
-roughness = 0.4
+roughness = 0.14
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_2gitb"]
 material = SubResource("StandardMaterial3D_2gitb")
@@ -26,9 +26,6 @@ material = SubResource("StandardMaterial3D_2gitb")
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2gitb"]
 radius = 0.7
 height = 3.95
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_2gitb"]
-size = Vector3(1.7, 0.5, 2.8)
 
 [node name="Car" type="VehicleBody3D"]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
@@ -101,10 +98,6 @@ skeleton = NodePath("")
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 8.742278e-08, 8.742278e-08, -8.742278e-08, -4.371139e-08, 1, 8.742278e-08, -1, -4.371138e-08, -2.1855673e-09, 1.3050001, 0.024999976)
 shape = SubResource("CapsuleShape3D_2gitb")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04999998, 0.8499999, 0.10000009)
-shape = SubResource("BoxShape3D_2gitb")
 
 [node name="ReflectionProbe" type="ReflectionProbe" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

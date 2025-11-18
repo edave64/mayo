@@ -34,13 +34,15 @@ mass = 500.0
 center_of_mass_mode = 1
 center_of_mass = Vector3(0, 0.5, 0)
 can_sleep = false
+angular_damp = 2.0
 script = ExtResource("1_2gitb")
-max_steer = 0.5
+max_steer = 0.3
 engine_power = 1500
 
 [node name="WheelFL" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0.5, 1.4)
 use_as_steering = true
+wheel_friction_slip = 1.0
 suspension_stiffness = 30.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="WheelFL"]
@@ -54,6 +56,7 @@ mesh = SubResource("CylinderMesh_2gitb")
 [node name="WheelFR" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0.5, 1.4)
 use_as_steering = true
+wheel_friction_slip = 1.0
 suspension_stiffness = 30.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="WheelFR"]
@@ -67,6 +70,7 @@ mesh = SubResource("CylinderMesh_2gitb")
 [node name="WheelBL" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0.5, -1.4)
 use_as_traction = true
+wheel_friction_slip = 5.0
 suspension_stiffness = 30.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="WheelBL"]
@@ -80,6 +84,7 @@ mesh = SubResource("CylinderMesh_2gitb")
 [node name="WheelBR" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0.5, -1.4)
 use_as_traction = true
+wheel_friction_slip = 5.0
 suspension_stiffness = 30.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="WheelBR"]
@@ -91,12 +96,12 @@ transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0
 mesh = SubResource("CylinderMesh_2gitb")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.7, 0, 0, 0, -8.305164e-08, -0.99999994, 0, 1.9000001, -4.3711385e-08, 0, 1.2525, 0)
+transform = Transform3D(1.7, 0, 0, 0, -8.305164e-08, -0.99999994, 0, 1.9000001, -4.3711385e-08, 0, 0.9525, 0)
 mesh = SubResource("CapsuleMesh_33qfd")
 skeleton = NodePath("")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 8.742278e-08, 8.742278e-08, -8.742278e-08, -4.371139e-08, 1, 8.742278e-08, -1, -4.371138e-08, -2.1855673e-09, 1.3050001, 0.024999976)
+transform = Transform3D(1, 8.742278e-08, 8.742278e-08, -8.742278e-08, -4.371139e-08, 1, 8.742278e-08, -1, -4.371138e-08, -2.1855673e-09, 1.005, 0.024999976)
 shape = SubResource("CapsuleShape3D_2gitb")
 
 [node name="ReflectionProbe" type="ReflectionProbe" parent="."]

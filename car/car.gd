@@ -33,5 +33,6 @@ func _process(delta: float) -> void:
 		
 	
 func _physics_process(delta: float) -> void:
+	var steer_power = min(max_steer, max_steer * (2 / linear_velocity.length()))
 	steering = move_toward(steering, Input.get_axis("vehicle_right", "vehicle_left") * max_steer, delta)
 	engine_force = Input.get_axis("vehicle_down", "vehicle_up") * engine_power

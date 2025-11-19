@@ -51,6 +51,16 @@ const size := 256.0
 	set(new_height):
 		height = new_height
 		invalidate_all_chunks()
+		if material is ShaderMaterial:
+			material.set_shader_parameter("height", new_height * 2.0)
+
+@export var material: Material = null:
+	set(new_material):
+		material = new_material
+		if material is ShaderMaterial:
+			material.set_shader_parameter("height", height * 2.0)
+		for mesh in chunk_meshes:
+			mesh.material_override = new_material
 
 func get_height(pos: Vector3) -> float:
 	return noise.get_noise_2d(pos.x, pos.z) * height
@@ -79,6 +89,12 @@ func _ready() -> void:
 		thread_started = thread_started || thread.start(worker)
 	
 	single_thread_mode = not thread_started
+	
+	if material:
+		if material is ShaderMaterial:
+			material.set_shader_parameter("height", height * 2.0)
+		for mesh in chunk_meshes:
+			mesh.material_override = material
 
 func _process(_delta: float) -> void:
 	if not tracking: return
@@ -326,7 +342,6 @@ class WorldGenTask:
 		var map_resolution = parent.resolution + 1
 		
 		child.mesh = array_mesh
-		child.material_override.set_shader_parameter("height", parent.height * 2.0)
 		
 		var height_map_scale: float = size / resolution
 		

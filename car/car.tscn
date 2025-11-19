@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://civ2iemgb6ums"]
+[gd_scene load_steps=10 format=3 uid="uid://civ2iemgb6ums"]
 
 [ext_resource type="Script" uid="uid://bbxd3xlf683rw" path="res://car/car.gd" id="1_2gitb"]
 
@@ -9,9 +9,18 @@ albedo_color = Color(0.14406255, 0.14406255, 0.14406255, 1)
 material = SubResource("StandardMaterial3D_dxy33")
 height = 0.2
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_2gitb"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_dxy33"]
+noise = SubResource("FastNoiseLite_2gitb")
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2gitb"]
-metallic = 1.0
-roughness = 0.14
+metallic = 0.95
+roughness = 0.16
+backlight = Color(0.8509804, 0.8156863, 0, 1)
+refraction_scale = 1.0
+detail_mask = SubResource("NoiseTexture2D_dxy33")
+detail_blend_mode = 1
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_2gitb"]
 material = SubResource("StandardMaterial3D_2gitb")
@@ -30,19 +39,20 @@ height = 3.95
 [node name="Car" type="VehicleBody3D"]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
 disable_mode = 2
-mass = 500.0
+mass = 1000.0
 center_of_mass_mode = 1
-center_of_mass = Vector3(0, 0.5, 0)
+center_of_mass = Vector3(0, 0.32, 0)
 can_sleep = false
 angular_damp = 2.0
 script = ExtResource("1_2gitb")
-max_steer = 0.3
+max_steer = 0.5
 engine_power = 1500
 
 [node name="WheelFL" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0.5, 1.4)
+use_as_traction = true
 use_as_steering = true
-wheel_friction_slip = 1.0
+wheel_friction_slip = 2.0
 suspension_stiffness = 30.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="WheelFL"]
@@ -55,8 +65,9 @@ mesh = SubResource("CylinderMesh_2gitb")
 
 [node name="WheelFR" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0.5, 1.4)
+use_as_traction = true
 use_as_steering = true
-wheel_friction_slip = 1.0
+wheel_friction_slip = 2.0
 suspension_stiffness = 30.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="WheelFR"]
@@ -70,7 +81,7 @@ mesh = SubResource("CylinderMesh_2gitb")
 [node name="WheelBL" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0.5, -1.4)
 use_as_traction = true
-wheel_friction_slip = 5.0
+wheel_friction_slip = 1.8
 suspension_stiffness = 30.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="WheelBL"]
@@ -84,7 +95,7 @@ mesh = SubResource("CylinderMesh_2gitb")
 [node name="WheelBR" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0.5, -1.4)
 use_as_traction = true
-wheel_friction_slip = 5.0
+wheel_friction_slip = 1.8
 suspension_stiffness = 30.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="WheelBR"]
@@ -105,8 +116,6 @@ transform = Transform3D(1, 8.742278e-08, 8.742278e-08, -8.742278e-08, -4.371139e
 shape = SubResource("CapsuleShape3D_2gitb")
 
 [node name="ReflectionProbe" type="ReflectionProbe" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-intensity = 0.45
+origin_offset = Vector3(0, 1, 0)
 box_projection = true
-mesh_lod_threshold = 0.0
 ambient_mode = 0

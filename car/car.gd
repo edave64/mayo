@@ -9,7 +9,7 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("vehicle_reset"):
 		var terrain = %TerrainGenerator
 		var max_height = max(
@@ -30,9 +30,11 @@ func _process(delta: float) -> void:
 			max_height,
 			position.z
 		)
-		
-	
+
+
 func _physics_process(delta: float) -> void:
-	var steer_power = min(max_steer, max_steer * (2 / linear_velocity.length()))
 	steering = move_toward(steering, Input.get_axis("vehicle_right", "vehicle_left") * max_steer, delta)
-	engine_force = Input.get_axis("vehicle_down", "vehicle_up") * engine_power
+	engine_force = Input.get_axis("vehicle_down","vehicle_up") * engine_power
+	%DebugPanel.add_debug_property('Velocity', "%.2f km/h" % (linear_velocity.length() * 60 * 60 / 1000))
+	%DebugPanel.add_debug_property('Velocity2', "%.2f m/s" % (linear_velocity.length()))
+	

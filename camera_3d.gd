@@ -1,13 +1,14 @@
 extends Camera3D
 
 @export var tracking: Node3D
+@export var mouse_movement := true
 
 const default_pitch := 1.0
 
 var twist := 0.0
 var pitch := default_pitch
 
-var mouse_sensitivity := 1
+var mouse_sensitivity := 0.01
 var twist_input := 0.0
 var pitch_input := 0.0
 
@@ -17,13 +18,13 @@ const distance = 6
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	pass # Replace with function body.
+	if mouse_movement:
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	#pitch = min(max_pitch, max(min_pitch, twist + twist_input))
-	twist = fmod(twist + twist_input, PI * 2)
+	twist = fmod(twist + twist_input + PI, PI * 2) - PI
 	twist_input = 0
 	
 	pitch = move_toward(pitch, default_pitch, delta / 3)
@@ -46,8 +47,9 @@ func _process(delta: float) -> void:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion && Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
-		twist_input = -event.relative.x * mouse_sensitivity
-		pitch_input = -event.relative.y * mouse_sensitivity
-	elif event is InputEventMouseButton && Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE:
-		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	if mouse_movement:
+		if event is InputEventMouseMotion && Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+			twist_input = -event.relative.x * mouse_sensitivity
+			pitch_input = -event.relative.y * mouse_sensitivity
+		elif event is InputEventMouseButton && Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE:
+			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)

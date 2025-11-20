@@ -1,7 +1,15 @@
 extends VehicleBody3D
 
-@export var max_steer = 0.9
-@export var engine_power = 300
+@export var max_steer := 0.9
+@export var engine_power := 300
+
+@onready
+var wheels: Array[VehicleWheel3D] = [
+	$WheelFL,
+	$WheelFR,
+	$WheelBL,
+	$WheelBR
+]
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -11,16 +19,11 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("vehicle_reset"):
-		var terrain = %TerrainGenerator
-		var max_height = max(
-			terrain.get_height(position + $WheelBL.position),
-			terrain.get_height(position + $WheelBL.position),
-			terrain.get_height(position + $WheelBL.position),
-			terrain.get_height(position + $WheelBL.position),
-		)
+		var terrain: TerrainGenerator = %TerrainGenerator
+		var max_height: float = wheels.map(func(x): return terrain.get_height(x.global_position)).max()
 		rotation = Vector3(
 			0,
-			PI,
+			rotation.y,
 			0
 		)
 		angular_velocity = Vector3.ZERO

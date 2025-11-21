@@ -1,6 +1,59 @@
-[gd_scene load_steps=2 format=3 uid="uid://c741pa3qh66e5"]
+[gd_scene load_steps=18 format=3 uid="uid://c741pa3qh66e5"]
 
 [ext_resource type="Script" uid="uid://djt2y3wkh4jca" path="res://menu.gd" id="1_lti8b"]
+[ext_resource type="Script" uid="uid://bw1lgcvqmktkv" path="res://menu_background.gd" id="2_ouk20"]
+[ext_resource type="Texture2D" uid="uid://q4ksi1bo7uub" path="res://Logo2.svg" id="3_4hy44"]
+[ext_resource type="Script" uid="uid://dwugrm1vc2jyi" path="res://settings_menu.gd" id="3_mae5d"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lti8b"]
+bg_color = Color(0.47715193, 0.2675671, 0.65064883, 1)
+
+[sub_resource type="Theme" id="Theme_mae5d"]
+BoxContainer/styles/bg = SubResource("StyleBoxFlat_lti8b")
+
+[sub_resource type="QuadMesh" id="QuadMesh_4hy44"]
+size = Vector2(1152, 648)
+center_offset = Vector3(576, 324, 0)
+
+[sub_resource type="Gradient" id="Gradient_lti8b"]
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ouk20"]
+gradient = SubResource("Gradient_lti8b")
+
+[sub_resource type="Gradient" id="Gradient_mae5d"]
+colors = PackedColorArray(0.1254902, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_4hy44"]
+gradient = SubResource("Gradient_mae5d")
+use_hdr = true
+fill_from = Vector2(0, 1)
+
+[sub_resource type="Gradient" id="Gradient_ytr4m"]
+colors = PackedColorArray(0, 0.1254902, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_l48gv"]
+gradient = SubResource("Gradient_ytr4m")
+use_hdr = true
+fill_to = Vector2(1, 1)
+
+[sub_resource type="Gradient" id="Gradient_ecwwl"]
+colors = PackedColorArray(0, 0, 0.1254902, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_kk3ma"]
+gradient = SubResource("Gradient_ecwwl")
+use_hdr = true
+fill_from = Vector2(1, 0)
+fill_to = Vector2(0, 1)
+
+[sub_resource type="Gradient" id="Gradient_4hy44"]
+colors = PackedColorArray(0.1254902, 0.0627451, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ytr4m"]
+gradient = SubResource("Gradient_4hy44")
+use_hdr = true
+fill_from = Vector2(1, 1)
+fill_to = Vector2(0, 0)
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -9,7 +62,46 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_mae5d")
 script = ExtResource("1_lti8b")
+
+[node name="Background" type="MeshInstance2D" parent="."]
+position = Vector2(1, 0)
+mesh = SubResource("QuadMesh_4hy44")
+texture = SubResource("GradientTexture1D_ouk20")
+script = ExtResource("2_ouk20")
+
+[node name="R" type="MeshInstance2D" parent="Background"]
+scale = Vector2(1, 1.0000001)
+mesh = SubResource("QuadMesh_4hy44")
+texture = SubResource("GradientTexture2D_4hy44")
+
+[node name="G" type="MeshInstance2D" parent="Background"]
+scale = Vector2(0.99999994, 1.0000001)
+mesh = SubResource("QuadMesh_4hy44")
+texture = SubResource("GradientTexture2D_l48gv")
+
+[node name="B" type="MeshInstance2D" parent="Background"]
+scale = Vector2(1, 1.0000001)
+mesh = SubResource("QuadMesh_4hy44")
+texture = SubResource("GradientTexture2D_kk3ma")
+
+[node name="O" type="MeshInstance2D" parent="Background"]
+scale = Vector2(1, 1.0000001)
+mesh = SubResource("QuadMesh_4hy44")
+texture = SubResource("GradientTexture2D_ytr4m")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -205.0
+offset_right = 205.0
+offset_bottom = 231.0
+grow_horizontal = 2
+pivot_offset = Vector2(205, 115.5)
+texture = ExtResource("3_4hy44")
 
 [node name="Main" type="BoxContainer" parent="."]
 layout_mode = 1
@@ -18,9 +110,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -48.0
+offset_left = -100.0
 offset_top = -50.5
-offset_right = 48.0
+offset_right = 100.0
 offset_bottom = 50.5
 grow_horizontal = 2
 grow_vertical = 2
@@ -54,6 +146,7 @@ offset_bottom = 15.5
 grow_horizontal = 2
 grow_vertical = 2
 vertical = true
+script = ExtResource("3_mae5d")
 
 [node name="VSync" type="CheckBox" parent="Settings"]
 layout_mode = 2
@@ -64,8 +157,9 @@ layout_mode = 2
 text = "Exit
 "
 
+[connection signal="resized" from="." to="Background" method="_on_main_menu_resized"]
 [connection signal="pressed" from="Main/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="Main/Settings" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="Main/Exit" to="." method="_on_exit_pressed"]
-[connection signal="toggled" from="Settings/VSync" to="." method="_on_v_sync_toggled"]
+[connection signal="toggled" from="Settings/VSync" to="Settings" method="_on_v_sync_toggled"]
 [connection signal="pressed" from="Settings/Back" to="." method="_on_back_pressed"]

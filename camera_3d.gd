@@ -5,7 +5,7 @@ extends Camera3D
 
 const default_pitch := 1.0
 
-var twist := 0.0
+var twist := PI
 var pitch := default_pitch
 
 var mouse_sensitivity := 0.01
@@ -14,7 +14,8 @@ var pitch_input := 0.0
 
 const max_pitch = PI
 const min_pitch = PI / 4
-const distance = 6
+const distance = 10
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

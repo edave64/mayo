@@ -1,6 +1,6 @@
-[gd_scene load_steps=54 format=3 uid="uid://cyuj0oevec11g"]
+[gd_scene load_steps=57 format=3 uid="uid://cyuj0oevec11g"]
 
-[ext_resource type="Script" uid="uid://3iji867c81k5" path="res://addons/godot_aerodynamic_physics/core/aero_body_3d.gd" id="1_d1sow"]
+[ext_resource type="Script" uid="uid://dtue03wni7wfg" path="res://plane/plane.gd" id="1_mq3ua"]
 [ext_resource type="Script" uid="uid://d1725od371u4a" path="res://addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_surface_3d/manual_aero_surface_3d/manual_aero_surface_3d.gd" id="2_fqqrd"]
 [ext_resource type="PackedScene" uid="uid://rdufu272eaqv" path="res://plane/plane.blend" id="2_peqmt"]
 [ext_resource type="Script" uid="uid://ctbwb7xlhft6t" path="res://addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_surface_3d/manual_aero_surface_3d/manual_aero_surface_config.gd" id="3_d1sow"]
@@ -9,24 +9,19 @@
 [ext_resource type="Script" uid="uid://c46td0go5kvp6" path="res://addons/godot_aerodynamic_physics/core/control_configs/aero_influencer_control_axis_config.gd" id="7_drk06"]
 [ext_resource type="Script" uid="uid://cblxodmmwvpt6" path="res://addons/godot_aerodynamic_physics/core/control_configs/aero_influencer_control_config.gd" id="8_hy5e4"]
 [ext_resource type="Script" uid="uid://cc5dwx5pqkaur" path="res://addons/godot_aerodynamic_physics/components/AeroControlComponent.gd" id="9_mq3ua"]
+[ext_resource type="Script" uid="uid://bsu5rdrtiqph7" path="res://addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_mover_3d/aero_propeller_3d.gd" id="9_xw1vv"]
 [ext_resource type="Script" uid="uid://dfbhcpt1rr3ai" path="res://addons/godot_aerodynamic_physics/core/control_configs/aero_control_config_axis.gd" id="10_gvgkk"]
 [ext_resource type="Script" uid="uid://cbgqb7g7mmwtu" path="res://addons/godot_aerodynamic_physics/core/control_configs/aero_control_config.gd" id="11_xw1vv"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_peqmt"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7dm0k"]
-size = Vector3(3, 3, 6.1)
+size = Vector3(3, 2.6000001, 6.1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_jaatl"]
 size = Vector3(11, 0.4, 2)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_0xm2m"]
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_h2yge"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_peqmt"]
-
-[sub_resource type="Skin" id="Skin_jaatl"]
 
 [sub_resource type="Curve" id="Curve_rfirh"]
 _limits = [0.0, 1.0, -180.0, 180.0]
@@ -127,9 +122,9 @@ aspect_ratio = 8.465776293823039
 
 [sub_resource type="Resource" id="Resource_lcyg8"]
 script = ExtResource("4_h2q6m")
-chord = 0.46000000000000013
-span = 4.515000000000001
-area = 2.0769000000000006
+chord = 0.4600000000000001
+span = 4.515
+area = 2.0769
 aspect_ratio = 9.815217391304346
 
 [sub_resource type="Resource" id="Resource_0ambj"]
@@ -208,6 +203,22 @@ axis_configs = Array[ExtResource("7_drk06")]([SubResource("Resource_cpk0g")])
 use_separate_minmax = true
 min_value = Vector3(0, 0, -1)
 
+[sub_resource type="Resource" id="Resource_8dpv0"]
+resource_name = "throttle"
+script = ExtResource("7_drk06")
+axis_name = "throttle"
+contribution = Vector3(1, 1, 1)
+
+[sub_resource type="Resource" id="Resource_ldf84"]
+script = ExtResource("8_hy5e4")
+axis_configs = Array[ExtResource("7_drk06")]([SubResource("Resource_8dpv0")])
+use_separate_minmax = true
+max_value = Vector3(0, 200, 0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_peqmt"]
+
+[sub_resource type="Skin" id="Skin_jaatl"]
+
 [sub_resource type="Resource" id="Resource_uciay"]
 resource_name = "pitch"
 script = ExtResource("10_gvgkk")
@@ -251,74 +262,56 @@ axis_name = "collective"
 script = ExtResource("11_xw1vv")
 axis_configs = Array[ExtResource("10_gvgkk")]([SubResource("Resource_uciay"), SubResource("Resource_caylq"), SubResource("Resource_1aykh"), SubResource("Resource_1wqyx"), SubResource("Resource_8vlmv"), SubResource("Resource_8kian")])
 
+[sub_resource type="CylinderMesh" id="CylinderMesh_h2yge"]
+
 [node name="Plane" type="VehicleBody3D"]
 mass = 1000.0
 physics_material_override = SubResource("PhysicsMaterial_peqmt")
-center_of_mass_mode = 1
 linear_damp_mode = 1
 angular_damp_mode = 1
-script = ExtResource("1_d1sow")
+script = ExtResource("1_mq3ua")
 show_debug = true
-show_wing_debug_vectors = false
-show_drag_vectors = false
-show_angular_velocity = false
+show_torque = true
 metadata/_custom_type_script = "uid://3iji867c81k5"
 
 [node name="plane" parent="." instance=ExtResource("2_peqmt")]
-transform = Transform3D(-1, 0, -8.742278e-08, -1.5180806e-08, 0.9848077, 0.17364818, 8.609462e-08, 0.17364818, -0.9848077, 0, 2.685022, 0)
+transform = Transform3D(-1, 0, -8.742278e-08, -1.5180806e-08, 0.9848077, 0.17364818, 8.609462e-08, 0.17364818, -0.9848077, 0, 1.385022, 0)
 
 [node name="Body" parent="plane" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 1.4901161e-08, -7.1054274e-15, -1.4901161e-08, 1, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2409897, 1.95)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.14098957, 1.95)
 shape = SubResource("BoxShape3D_7dm0k")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 shape = SubResource("BoxShape3D_jaatl")
 
 [node name="HindWheel" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.3000001, 5)
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="HindWheel"]
 transform = Transform3D(0.09999996, -2.9802314e-08, 1.6381669e-09, -7.450581e-09, 0.7, -7.38929e-09, -1.6381652e-09, 5.1725046e-08, 0.099999964, 8.4640965e-07, 0.5, 0)
 mesh = SubResource("CylinderMesh_0xm2m")
 
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="HindWheel"]
-transform = Transform3D(-2.1855692e-08, -0.099999964, 0, 0.49999997, -4.3711372e-09, 0, 0, 0, 0.5, 7.86805e-07, 0, 0)
-mesh = SubResource("CylinderMesh_h2yge")
-
 [node name="Node3D" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.3000001, 0)
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="Node3D"]
 transform = Transform3D(0.09063074, 0.29583275, 0, -0.042261817, 0.63441545, 0, 0, 0, 0.099999964, -0.59999996, 0.5, 0)
 mesh = SubResource("CylinderMesh_0xm2m")
 skeleton = NodePath("../..")
 
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="Node3D"]
-transform = Transform3D(-2.1855692e-08, -0.099999964, 0, 0.49999997, -4.3711372e-09, 0, 0, 0, 0.5, -0.90000004, 0, 0)
-mesh = SubResource("CylinderMesh_h2yge")
-skeleton = NodePath("../..")
-
 [node name="Node3D2" type="Node3D" parent="."]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0, 0)
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, -1.3000001, 0)
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="Node3D2"]
 transform = Transform3D(0.09063074, 0.29583275, 0, -0.042261817, 0.63441545, 0, 0, 0, 0.099999964, -0.59999996, 0.5, 0)
 mesh = SubResource("CylinderMesh_0xm2m")
 
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="Node3D2"]
-transform = Transform3D(-2.1855692e-08, -0.099999964, 0, 0.49999997, -4.3711372e-09, 0, 0, 0, 0.5, -0.90000004, 0, 0)
-mesh = SubResource("CylinderMesh_h2yge")
-
-[node name="prop" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.19999999, 0, 0, 0, 1.9696153, -0.008682411, 0, 0.34729633, 0.0492404, 0, 2, -2.5)
-mesh = SubResource("BoxMesh_peqmt")
-skin = SubResource("Skin_jaatl")
-
 [node name="WingR" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.25881904, 0, 0.25881904, 0.9659258, 3.1999998, 2.8, -0.6)
+transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.25881904, 0, 0.25881904, 0.9659258, 3.1999998, 1.5999998, -0.70000017)
 script = ExtResource("2_fqqrd")
 manual_config = SubResource("Resource_mq3ua")
 wing_config = SubResource("Resource_gvgkk")
@@ -338,7 +331,7 @@ show_thrust = true
 metadata/_custom_type_script = "uid://d1725od371u4a"
 
 [node name="HStabelizer" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.258819, 0, 0.258819, 0.9659258, 0, 1.3000001, 4.945087)
+transform = Transform3D(1, 0, 0, 0, 0.9659258, -0.258819, 0, 0.258819, 0.9659258, 0, 2.2351742e-08, 4.945087)
 script = ExtResource("2_fqqrd")
 manual_config = SubResource("Resource_lcfy3")
 wing_config = SubResource("Resource_lbrwg")
@@ -353,7 +346,7 @@ actuation_config = SubResource("Resource_brm6c")
 metadata/_custom_type_script = "uid://d1725od371u4a"
 
 [node name="VStabelizer" type="Node3D" parent="."]
-transform = Transform3D(-4.371139e-08, -1, 0, 0.9659258, -4.222196e-08, -0.25881904, 0.25881904, -1.131334e-08, 0.9659258, 0, 2.2, 5)
+transform = Transform3D(-4.371139e-08, -1, 0, 0.9659258, -4.222196e-08, -0.25881904, 0.25881904, -1.131334e-08, 0.9659258, 0, 0.9, 5)
 script = ExtResource("2_fqqrd")
 manual_config = SubResource("Resource_0l1d3")
 wing_config = SubResource("Resource_5tqsg")
@@ -368,15 +361,57 @@ actuation_config = SubResource("Resource_646km")
 metadata/_custom_type_script = "uid://d1725od371u4a"
 
 [node name="AeroThruster3D" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.96592593, -0.25881907, 0, 0.25881907, 0.96592593, 0, 2, -2.5)
+transform = Transform3D(1, 0, 0, 0, 0.96592593, -0.25881907, 0, 0.25881907, 0.96592593, 0, 0.6999999, -2.5)
 script = ExtResource("6_j2fql")
 throttle_control_config = SubResource("Resource_328q4")
-show_thrust = true
+show_force = false
+show_lift = false
+show_drag = false
 metadata/_custom_type_script = "uid://3kjm0rdymoth"
+
+[node name="AeroPropeller3D" type="Node3D" parent="." node_paths=PackedStringArray("propeller_blade")]
+transform = Transform3D(1, 0, 0, 0, 0.17364813, 0.9848077, 0, -0.9848077, 0.17364813, 0, 0.6999999, -2.5)
+script = ExtResource("9_xw1vv")
+propeller_blade = NodePath("")
+propeller_speed_control_config = SubResource("Resource_ldf84")
+show_torque = true
+show_lift = false
+show_thrust = true
+metadata/_custom_type_script = "uid://bsu5rdrtiqph7"
+
+[node name="prop" type="MeshInstance3D" parent="AeroPropeller3D"]
+transform = Transform3D(0.19999997, 0, 0, 0, 6.1588864e-08, -0.050000016, 0, 1.9999996, -1.2542476e-09, 0, -1.1920929e-07, 1.4999998)
+mesh = SubResource("BoxMesh_peqmt")
+skin = SubResource("Skin_jaatl")
+skeleton = NodePath("../..")
 
 [node name="AeroControlComponent" type="Node" parent="."]
 script = ExtResource("9_mq3ua")
 control_config = SubResource("Resource_h1rv3")
 metadata/_custom_type_script = "uid://cc5dwx5pqkaur"
+
+[node name="WheelR" type="VehicleWheel3D" parent="."]
+transform = Transform3D(-0.5, 0, -4.371139e-08, 0, 0.5, 0, 4.371139e-08, 0, -0.5, 0.9, -1.3000001, 0)
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="WheelR"]
+transform = Transform3D(-4.3711385e-08, -0.19999993, -1.7484555e-07, 0.99999994, -8.7422745e-09, 0, -7.642741e-15, -3.4969098e-08, 1, -1.1920929e-07, 0, -1.57361e-07)
+mesh = SubResource("CylinderMesh_h2yge")
+skeleton = NodePath("../../Node3D2")
+
+[node name="WheelL" type="VehicleWheel3D" parent="."]
+transform = Transform3D(-0.5, 0, -4.371139e-08, 0, 0.5, 0, 4.371139e-08, 0, -0.5, -0.90000004, -1.3000001, 0)
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="WheelL"]
+transform = Transform3D(4.3711385e-08, 0.19999993, 8.742278e-08, 0.99999994, -8.7422745e-09, 0, 3.8213705e-15, 1.7484549e-08, -1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_h2yge")
+skeleton = NodePath("../..")
+
+[node name="WheelH" type="VehicleWheel3D" parent="."]
+transform = Transform3D(-0.5, 0, -4.371139e-08, 0, 0.5, 0, 4.371139e-08, 0, -0.5, -3.7252903e-08, -1.3000001, 5)
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="WheelH"]
+transform = Transform3D(4.3711385e-08, 0.19999993, 8.742278e-08, 0.99999994, -8.7422745e-09, 0, 3.8213705e-15, 1.7484549e-08, -1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_h2yge")
+skeleton = NodePath("../../HindWheel")
 
 [editable path="plane"]

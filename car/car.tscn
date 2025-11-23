@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://civ2iemgb6ums"]
+[gd_scene load_steps=11 format=3 uid="uid://civ2iemgb6ums"]
 
 [ext_resource type="Script" uid="uid://bbxd3xlf683rw" path="res://car/car.gd" id="1_2gitb"]
+[ext_resource type="Script" uid="uid://dacuhbgybtbto" path="res://tools/vehicle_reset.gd" id="2_dxy33"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dxy33"]
 albedo_color = Color(0.14406255, 0.14406255, 0.14406255, 1)
@@ -45,8 +46,6 @@ center_of_mass = Vector3(0, 0.32, 0)
 can_sleep = false
 angular_damp = 2.0
 script = ExtResource("1_2gitb")
-max_steer = 0.5
-engine_power = 1500
 
 [node name="WheelFL" type="VehicleWheel3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0.5, 1.4)
@@ -55,11 +54,11 @@ use_as_steering = true
 wheel_friction_slip = 2.0
 suspension_stiffness = 30.0
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="WheelFL"]
+[node name="Rubber" type="MeshInstance3D" parent="WheelFL"]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("CylinderMesh_33qfd")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="WheelFL"]
+[node name="Hub" type="MeshInstance3D" parent="WheelFL"]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("CylinderMesh_2gitb")
 
@@ -70,11 +69,11 @@ use_as_steering = true
 wheel_friction_slip = 2.0
 suspension_stiffness = 30.0
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="WheelFR"]
+[node name="Rubber" type="MeshInstance3D" parent="WheelFR"]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("CylinderMesh_33qfd")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="WheelFR"]
+[node name="Hub" type="MeshInstance3D" parent="WheelFR"]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("CylinderMesh_2gitb")
 
@@ -84,11 +83,11 @@ use_as_traction = true
 wheel_friction_slip = 1.8
 suspension_stiffness = 30.0
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="WheelBL"]
+[node name="Rubber" type="MeshInstance3D" parent="WheelBL"]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("CylinderMesh_33qfd")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="WheelBL"]
+[node name="Hub" type="MeshInstance3D" parent="WheelBL"]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("CylinderMesh_2gitb")
 
@@ -98,11 +97,11 @@ use_as_traction = true
 wheel_friction_slip = 1.8
 suspension_stiffness = 30.0
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="WheelBR"]
+[node name="Rubber" type="MeshInstance3D" parent="WheelBR"]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("CylinderMesh_33qfd")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="WheelBR"]
+[node name="Hub" type="MeshInstance3D" parent="WheelBR"]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("CylinderMesh_2gitb")
 
@@ -119,3 +118,7 @@ shape = SubResource("CapsuleShape3D_2gitb")
 origin_offset = Vector3(0, 1, 0)
 box_projection = true
 ambient_mode = 0
+
+[node name="VehicleReset" type="Node" parent="."]
+script = ExtResource("2_dxy33")
+metadata/_custom_type_script = "uid://dacuhbgybtbto"

@@ -9,7 +9,8 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
+	if not tracking: return
 	position = tracking.position + Vector3(0, 2.5, 0)
 	var dir = position - pointTowards.position
 	rotation = Vector3(

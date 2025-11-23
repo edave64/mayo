@@ -63,6 +63,7 @@ const size := 256.0
 			mesh.material_override = new_material
 
 func get_height(pos: Vector3) -> float:
+	return 0
 	return noise.get_noise_2d(pos.x, pos.z) * height
 
 var single_thread_mode = false
@@ -356,6 +357,7 @@ class WorldGenTask:
 		realized = true
 	
 	func get_height(x: float, y: float) -> float:
+		return 0
 		return noise.get_noise_2d(x, y) * height
 
 	func get_normal(x: float, y: float) -> Vector3:

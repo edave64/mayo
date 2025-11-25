@@ -1,7 +1,12 @@
 extends Control
 
+const MAIN_PATH = "res://main.tscn"
+
+func _ready() -> void:
+	ResourceLoader.load_threaded_request(MAIN_PATH)
+
 func _on_start_pressed() -> void:
-	get_tree().change_scene_to_file("res://main.tscn")
+	get_tree().change_scene_to_packed(ResourceLoader.load_threaded_get(MAIN_PATH))
 
 func _on_exit_pressed() -> void:
 	get_tree().quit(0)

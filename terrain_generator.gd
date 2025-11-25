@@ -63,7 +63,6 @@ const size := 256.0
 			mesh.material_override = new_material
 
 func get_height(pos: Vector3) -> float:
-	return 0
 	return noise.get_noise_2d(pos.x, pos.z) * height
 
 var single_thread_mode = false
@@ -86,8 +85,8 @@ func _ready() -> void:
 	
 	var thread_started = false
 	
-	for thread in thread_pool:
-		thread_started = thread_started || thread.start(worker)
+	#for thread in thread_pool:
+	#	thread_started = thread_started || thread.start(worker)
 	
 	single_thread_mode = not thread_started
 	
@@ -120,7 +119,9 @@ func _process(_delta: float) -> void:
 				if single_tread_task: break
 		else:
 			# Step 2: Generate the chunk spread across 3 frames.
-			if not single_tread_task.array_mesh:
+			if not single_tread_task.height_data:
+				single_tread_task.generate_height_data()
+			elif not single_tread_task.array_mesh:
 				single_tread_task.generate_mesh()
 			elif single_tread_task.height_map_data.size() == 0:
 				single_tread_task.generate_height_map()
@@ -248,6 +249,7 @@ class WorldGenTask:
 	var resolution: int
 
 	# Results
+	var height_data: PackedFloat32Array
 	var array_mesh: ArrayMesh
 	var height_map_data: PackedFloat32Array
 	
@@ -260,33 +262,63 @@ class WorldGenTask:
 		resolution = parent.resolution
 	
 	func work_in_thread() -> void:
+		generate_height_data()
 		generate_mesh()
 		generate_height_map()
 		completed = true
+
+	func generate_height_data() -> void:
+		var height_map_scale: float = size / resolution
+		
+		var offset_x = grid_x * size
+		var offset_y = grid_y * size
+		
+		var map_resolution = resolution + 2
+		
+		var data = PackedFloat32Array()
+		data.resize((map_resolution) * (map_resolution))
+		
+		@warning_ignore("integer_division")
+		var half_res = (map_resolution - 1) / 2
+		
+		for i:int in data.size():
+			var x = (i % map_resolution - half_res) * height_map_scale
+			@warning_ignore("integer_division")
+			var y = (i / map_resolution - half_res) * height_map_scale
+			
+			data[i] = get_height(offset_x + x - height_map_scale, offset_y + y - height_map_scale)
+		
+		height_data = data
 	
+	func get_height_data(x: int, y: int) -> float:
+		return height_data[(x + 1) + (y + 1) * (resolution + 2)]
+		
 	func generate_mesh() -> void:
 		var plane = PlaneMesh.new()
-		plane.subdivide_depth = parent.resolution
-		plane.subdivide_width = parent.resolution
+		plane.subdivide_depth = resolution
+		plane.subdivide_width = resolution
 		plane.size = Vector2(size, size)
 		
 		var plane_arrays = plane.get_mesh_arrays()
 		var vertex_array: PackedVector3Array = plane_arrays[ArrayMesh.ARRAY_VERTEX]
 		var normal_array: PackedVector3Array = plane_arrays[ArrayMesh.ARRAY_NORMAL]
 		var tangent_array: PackedFloat32Array = plane_arrays[ArrayMesh.ARRAY_TANGENT]
-		
-		var offset_x = grid_x * size
-		var offset_y = grid_y * size
+		var half_size := (size / 2.0)
+		var step_size := size / resolution
 		
 		for i:int in vertex_array.size():
 			var vertex := vertex_array[i]
-			var normal = Vector3.UP
-			var tangent = Vector3.RIGHT
 			
-			if noise:
-				vertex.y = get_height(vertex.x + offset_x, vertex.z + offset_y)
-				normal = get_normal(vertex.x + offset_x, vertex.z + offset_y)
-				tangent = normal.cross(Vector3.UP)
+			var x := int((vertex.x + half_size) / step_size) - 1
+			var z := int((vertex.z + half_size) / step_size) - 1
+			
+			vertex.y = get_height_data(x, z)
+			var normal := Vector3(
+				(get_height_data(x + 1, z) - get_height_data(x - 1, z) / 2),
+				1,
+				(get_height_data(x, z + 1) - get_height_data(x, z - 1) / 2)
+			).normalized()
+			var tangent = normal.cross(Vector3.UP)
 			
 			vertex_array[i] = vertex
 			normal_array[i] = normal
@@ -312,11 +344,10 @@ class WorldGenTask:
 		var half_res = (map_resolution) / 2
 		
 		for i:int in data.size():
-			var x = (i % map_resolution - half_res) * height_map_scale
-			@warning_ignore("integer_division")
-			var y = (i / map_resolution - half_res) * height_map_scale
+			var x = (i % map_resolution)
+			var y = (i / map_resolution)
 			
-			data[i] = get_height(offset_x + x, offset_y + y) / (height_map_scale)
+			data[i] = get_height_data(x, y) / (height_map_scale)
 		
 		height_map_data = data
 	
@@ -357,8 +388,7 @@ class WorldGenTask:
 		realized = true
 	
 	func get_height(x: float, y: float) -> float:
-		return 0
-		return noise.get_noise_2d(x, y) * height
+		return parent.get_height(Vector3(x, 0, y))
 
 	func get_normal(x: float, y: float) -> Vector3:
 		var epsilon = size / resolution

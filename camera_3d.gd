@@ -2,10 +2,11 @@ extends Camera3D
 
 @export var tracking: Node3D
 @export var mouse_movement := true
+@export var flipped := false
 
 const default_pitch := 1.0
 
-var twist := PI
+var twist := 0
 var pitch := default_pitch
 
 var mouse_sensitivity := 0.01
@@ -31,14 +32,14 @@ func _process(delta: float) -> void:
 	pitch = move_toward(pitch, default_pitch, delta / 3)
 	twist = move_toward(twist, 0, delta / 3)
 	
-	var transform = Basis.from_euler(
+	var camera_rotation = Basis.from_euler(
 		Vector3(
 			0, #pitch,
-			-tracking.rotation.y + PI + twist,
+			-tracking.rotation.y + twist + (PI if flipped else 0.0),
 			0,
 		)
 	)
-	var offset = Vector3.BACK * transform * distance
+	var offset = Vector3.BACK * camera_rotation * distance
 	
 	position = tracking.get_position() + offset
 	position.y = max(position.y, %TerrainGenerator.get_height(position) + 3)

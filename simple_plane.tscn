@@ -33,7 +33,6 @@ height = 0.3
 [node name="SimplePlane" type="VehicleBody3D"]
 mass = 1000.0
 center_of_mass_mode = 1
-center_of_mass = Vector3(0, -1.03, 0.89)
 script = ExtResource("1_pxpb7")
 
 [node name="VehicleReset" type="Node" parent="."]

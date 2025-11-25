@@ -31,7 +31,7 @@ func _apply_thrust() -> void:
 
 func _apply_controls(delta: float) -> void:
 	var pitch_input := Input.get_axis("plane_up", "plane_down")
-	var roll_input  := Input.get_axis("vehicle_right" , "vehicle_left")
+	var roll_input  := Input.get_axis("vehicle_right", "vehicle_left")
 
 	$plane/AeleronL.rotation.x = 0.1 * roll_input
 	$plane/AeleronR.rotation.x = -0.1 * roll_input
@@ -39,18 +39,18 @@ func _apply_controls(delta: float) -> void:
 	#$plane/Rudder.rotation.y = -0.01 * Input.get_axis('vehicle_left', 'vehicle_right')
 	$plane/Elevator.rotation.x = -0.02 * pitch_input
 
-	var axis_pitch := global_transform.basis.x
-	var axis_roll  := global_transform.basis.z
-
 	if pitch_input != 0.0:
-		apply_torque(axis_pitch * (pitch_input * pitch_speed) * delta)
+		var pitch_axis := global_transform.basis.x
+		apply_torque(pitch_axis * (pitch_input * pitch_speed) * delta)
 
 	if roll_input != 0.0:
-		apply_torque(axis_roll * (roll_input * roll_speed) * delta)
+		var roll_axis := global_transform.basis.z
+		apply_torque(roll_axis * (roll_input * roll_speed) * delta)
 
 func _apply_lift() -> void:
 	var forward := -global_transform.basis.z
 	var forward_speed := linear_velocity.dot(forward)
+	%DebugPanel.add_debug_property('Speed', "%.2f m/s" % (forward_speed))
 
 	if forward_speed <= 0.0:
 		return

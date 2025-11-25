@@ -20,8 +20,8 @@ func _process(delta: float) -> void:
 	add_debug_property("break", 'on' if Input.is_action_pressed("plane_break") else 'off')
 	add_debug_property("left", 'on' if Input.is_action_pressed("vehicle_left") else 'off')
 	add_debug_property("right", 'on' if Input.is_action_pressed("vehicle_right") else 'off')
-	add_debug_property("up", 'on' if Input.is_action_pressed("vehicle_up") else 'off')
-	add_debug_property("down", 'on' if Input.is_action_pressed("vehicle_down") else 'off')
+	add_debug_property("up", 'on' if Input.is_action_pressed("vehicle_gas") else 'off')
+	add_debug_property("down", 'on' if Input.is_action_pressed("vehicle_break") else 'off')
 
 @onready
 var property_container = $MarginContainer/VBoxContainer

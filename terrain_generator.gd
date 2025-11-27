@@ -102,7 +102,6 @@ func _process(_delta: float) -> void:
 	var current_x = int(round(tracking.position.x / size))
 	var current_y = int(round(tracking.position.z / size))
 	
-	
 	if single_thread_mode:
 		# In single thread mode: Render each chunk across 3 frames
 		if not single_tread_task:
@@ -273,30 +272,30 @@ class WorldGenTask:
 		var offset_x = grid_x * size
 		var offset_y = grid_y * size
 		
-		var map_resolution = resolution + 2
+		var map_resolution = resolution + 4
 		
 		var data = PackedFloat32Array()
 		data.resize((map_resolution) * (map_resolution))
 		
 		@warning_ignore("integer_division")
-		var half_res = (map_resolution - 1) / 2
+		var half_res = map_resolution / 2
 		
 		for i:int in data.size():
 			var x = (i % map_resolution - half_res) * height_map_scale
 			@warning_ignore("integer_division")
 			var y = (i / map_resolution - half_res) * height_map_scale
 			
-			data[i] = get_height(offset_x + x - height_map_scale, offset_y + y - height_map_scale)
+			data[i] = get_height(offset_x + x, offset_y + y)
 		
 		height_data = data
 	
 	func get_height_data(x: int, y: int) -> float:
-		return height_data[(x + 1) + (y + 1) * (resolution + 2)]
+		return height_data[(x + 2) + (y + 2) * (resolution + 4)]
 		
 	func generate_mesh() -> void:
 		var plane = PlaneMesh.new()
-		plane.subdivide_depth = resolution
-		plane.subdivide_width = resolution
+		plane.subdivide_depth = resolution - 1
+		plane.subdivide_width = resolution - 1
 		plane.size = Vector2(size, size)
 		
 		var plane_arrays = plane.get_mesh_arrays()
@@ -309,8 +308,8 @@ class WorldGenTask:
 		for i:int in vertex_array.size():
 			var vertex := vertex_array[i]
 			
-			var x := int((vertex.x + half_size) / step_size) - 1
-			var z := int((vertex.z + half_size) / step_size) - 1
+			var x := int((vertex.x + half_size) / step_size)
+			var z := int((vertex.z + half_size) / step_size)
 			
 			vertex.y = get_height_data(x, z)
 			var normal := Vector3(
@@ -371,7 +370,7 @@ class WorldGenTask:
 		child.position.z = offset_y
 		child.position.y = 0
 		
-		var map_resolution = parent.resolution + 1
+		var map_resolution = resolution + 1
 		
 		child.mesh = array_mesh
 		

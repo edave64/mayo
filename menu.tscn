@@ -132,7 +132,7 @@ layout_mode = 2
 text = "Exit
 "
 
-[node name="Settings" type="BoxContainer" parent="."]
+[node name="Settings" type="GridContainer" parent="."]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -143,24 +143,48 @@ anchor_bottom = 0.5
 offset_left = -48.0
 offset_top = -15.5
 offset_right = 48.0
-offset_bottom = 15.5
+offset_bottom = 74.5
 grow_horizontal = 2
 grow_vertical = 2
-vertical = true
+columns = 2
 script = ExtResource("3_mae5d")
+
+[node name="Empty" type="Label" parent="Settings"]
+layout_mode = 2
 
 [node name="VSync" type="CheckBox" parent="Settings"]
 layout_mode = 2
 text = "VSync"
 
+[node name="Label" type="Label" parent="Settings"]
+layout_mode = 2
+text = "Terrain Resolution"
+
+[node name="TerrainDetail" type="OptionButton" parent="Settings"]
+layout_mode = 2
+selected = 1
+item_count = 3
+popup/item_0/text = "Low"
+popup/item_0/id = 0
+popup/item_1/text = "Medium"
+popup/item_1/id = 1
+popup/item_2/text = "High"
+popup/item_2/id = 2
+
+[node name="Empty2" type="Label" parent="Settings"]
+layout_mode = 2
+
 [node name="Back" type="Button" parent="Settings"]
 layout_mode = 2
-text = "Exit
+text = "Back
 "
 
 [connection signal="resized" from="." to="Background" method="_on_main_menu_resized"]
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="pressed" from="Main/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="Main/Settings" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="Main/Exit" to="." method="_on_exit_pressed"]
+[connection signal="terrain_detail_change" from="Settings" to="." method="_on_settings_terrain_detail_change"]
 [connection signal="toggled" from="Settings/VSync" to="Settings" method="_on_v_sync_toggled"]
+[connection signal="item_selected" from="Settings/TerrainDetail" to="Settings" method="_on_terrain_detail_item_selected"]
 [connection signal="pressed" from="Settings/Back" to="." method="_on_back_pressed"]

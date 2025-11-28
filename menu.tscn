@@ -185,6 +185,8 @@ text = "Back
 [connection signal="pressed" from="Main/Settings" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="Main/Exit" to="." method="_on_exit_pressed"]
 [connection signal="terrain_detail_change" from="Settings" to="." method="_on_settings_terrain_detail_change"]
+[connection signal="visibility_changed" from="Settings" to="." method="_on_settings_visibility_changed"]
+[connection signal="visibility_changed" from="Settings" to="Settings" method="_on_visibility_changed"]
 [connection signal="toggled" from="Settings/VSync" to="Settings" method="_on_v_sync_toggled"]
 [connection signal="item_selected" from="Settings/TerrainDetail" to="Settings" method="_on_terrain_detail_item_selected"]
 [connection signal="pressed" from="Settings/Back" to="." method="_on_back_pressed"]

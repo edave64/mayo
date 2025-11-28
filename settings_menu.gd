@@ -29,3 +29,7 @@ func _on_v_sync_toggled(toggled_on: bool) -> void:
 func _on_terrain_detail_item_selected(index: int) -> void:
 	config.set_value("mayo", "terrain_detail", index)
 	terrain_detail_change.emit(index)
+
+func _on_visibility_changed() -> void:
+	if visible:
+		$Back.grab_focus()

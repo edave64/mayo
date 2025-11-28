@@ -36,6 +36,15 @@ func _on_settings_pressed() -> void:
 func _on_visibility_changed() -> void:
 	$Main/Start.grab_focus()
 
-
 func _on_settings_terrain_detail_change(new_value: int) -> void:
 	terrain_detail_change.emit(new_value)
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		if event.is_action_pressed("pause"):
+			continue_game.emit()
+
+
+func _on_settings_visibility_changed() -> void:
+	if not $Settings.visible:
+		$Main/Settings.grab_focus()

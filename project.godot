@@ -15,14 +15,6 @@ run/main_scene="uid://c741pa3qh66e5"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
 
-[autoload]
-
-AeroUnits="*res://addons/godot_aerodynamic_physics/core/singletons/aero_units.gd"
-
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/godot_aerodynamic_physics/plugin.cfg")
-
 [global_group]
 
 terrain_gen=""

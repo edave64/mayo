@@ -11,6 +11,7 @@ func _ready() -> void:
 		return
 	
 	apply_resolution(config.get_value("mayo", "terrain_detail", 1))
+	_on_terrain_generator_view_distance_changed($TerrainGenerator.view_distance)
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
@@ -51,3 +52,9 @@ func apply_resolution(new_value: int) -> void:
 	
 	if $Car.process_mode == ProcessMode.PROCESS_MODE_INHERIT:
 		$Car/VehicleReset.reset()
+
+
+func _on_terrain_generator_view_distance_changed(view_distance: int) -> void:
+	if ($WorldEnvironment):
+		$WorldEnvironment.environment.fog_depth_begin = 150 + ($TerrainGenerator.size / 2.0) * view_distance
+		$WorldEnvironment.environment.fog_depth_end = 200 + TerrainGenerator.size * view_distance

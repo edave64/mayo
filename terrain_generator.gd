@@ -3,6 +3,8 @@ extends Node3D
 
 class_name TerrainGenerator
 
+signal view_distance_changed (view_distance: int)
+
 # Based on a YT tutorial by DevPoodle
 # https://www.youtube.com/watch?v=6qim01M1Yp0
 
@@ -62,6 +64,12 @@ const size := 256.0
 		for mesh in chunk_meshes:
 			mesh.material_override = new_material
 
+@export_range(1, 10, 1) var view_distance := 3:
+	set(new_view_distance):
+		view_distance = new_view_distance
+		recreate_chunk_meshes()
+		view_distance_changed.emit(new_view_distance)
+
 func get_height(pos: Vector3) -> float:
 	return noise.get_noise_2d(pos.x, pos.z) * height
 
@@ -69,24 +77,12 @@ var single_thread_mode = false
 var single_tread_task: WorldGenTask
 
 func _ready() -> void:
-	chunk_meshes = [
-		get_node('TerrainTL'),
-		get_node('TerrainTC'),
-		get_node('TerrainTR'),
-		get_node('TerrainCL'),
-		get_node('TerrainCC'),
-		get_node('TerrainCR'),
-		get_node('TerrainBL'),
-		get_node('TerrainBC'),
-		get_node('TerrainBR')
-	]
-	
-	task_by_chunk_mesh.resize(chunk_meshes.size())
+	recreate_chunk_meshes()
 	
 	var thread_started = false
 	
-	#for thread in thread_pool:
-	#	thread_started = thread_started || thread.start(worker)
+	for thread in thread_pool:
+		thread_started = thread_started || (thread.start(worker) == 0)
 	
 	single_thread_mode = not thread_started
 	
@@ -95,6 +91,40 @@ func _ready() -> void:
 			material.set_shader_parameter("height", height * 2.0)
 		for mesh in chunk_meshes:
 			mesh.material_override = material
+
+func recreate_chunk_meshes() -> void:
+	# First, invalidate all current tasks. Optimally, we might want to stop
+	# threads from working on things that will be discarded. For now, they'll
+	# just cancel themselves.
+	task_by_chunk_mesh = [null]
+	for mesh in chunk_meshes:
+		remove_child(mesh)
+		mesh.queue_free()
+	chunk_meshes = []
+	
+	# view_distance to the left and right, plus the center chunk
+	var chunks_per_direction = view_distance * 2 + 1
+	
+	for x in chunks_per_direction:
+		for y in chunks_per_direction:
+			var mesh = MeshInstance3D.new()
+			var body = StaticBody3D.new()
+			var collision = CollisionShape3D.new()
+			var shape = HeightMapShape3D.new()
+			body.name = "StaticBody3D"
+			collision.name = "Collision"
+			mesh.material_override = material
+			mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			collision.shape = shape
+			mesh.add_child(body)
+			body.add_child(collision)
+			add_child(mesh)
+			chunk_meshes.push_back(mesh)
+	
+	finished_tasks_mutex.lock()
+	finished_tasks = []
+	finished_tasks_mutex.unlock()
+	invalidate_all_chunks()
 
 func _process(_delta: float) -> void:
 	if not tracking: return
@@ -106,8 +136,8 @@ func _process(_delta: float) -> void:
 		# In single thread mode: Render each chunk across 3 frames
 		if not single_tread_task:
 			# Step 1: Find an open task to work on
-			for x in range(current_x - 1, current_x + 2):
-				for y in range(current_y - 1, current_y + 2):
+			for x in range(current_x - view_distance, current_x + view_distance + 1):
+				for y in range(current_y - view_distance, current_y + view_distance + 1):
 					if x == current_x && y == current_y: continue
 					
 					if not is_chunk_active(x, y):
@@ -136,8 +166,8 @@ func _process(_delta: float) -> void:
 			finished_tasks_mutex.unlock()
 			
 		# Step 2: Find the chunks that need to be generated
-		for x in range(-1, 2):
-			for y in range(-1, 2):
+		for x in range(-view_distance, view_distance + 1):
+			for y in range(-view_distance, view_distance + 1):
 				if x == 0 && y == 0: continue
 				
 				queue_chunk_load_if_needed(current_x + x, current_y + y)
@@ -155,21 +185,20 @@ var thread_pool: Array[Thread] = [
 # Since what we can render is limited by the amount of chunk meshes, we only
 # need to track up to one task per chunk mesh. So this array needs to be the
 # same size as the number of chunk meshes.
-var task_by_chunk_mesh: Array[WorldGenTask] = [null,null,null,null,null,null,null,null,null]
+var task_by_chunk_mesh: Array[WorldGenTask] = [null]
 
-var chunk_meshes: Array[MeshInstance3D]
-
-# The number of available chunk meshes for the x and y directions
-const chunk_meshes_x = 3
-const chunk_meshes_y = 3
+var chunk_meshes: Array[MeshInstance3D] = []
 
 # Every chunk position maps to one chunk mesh that will render it.
 # And since godot doesn't like nested collections, we address each of those
 # with a single number
 func get_chunk_mesh_idx(x: int, y: int) -> int:
-	var g_x = imod(x + 1, chunk_meshes_x)
-	var g_y = imod(y + 1, chunk_meshes_x)
-	return g_y * chunk_meshes_y + g_x
+	if task_by_chunk_mesh.size() == 1: return 1
+	
+	var chunks_per_direction = view_distance * 2 + 1
+	var g_x = imod(x + 1, chunks_per_direction)
+	var g_y = imod(y + 1, chunks_per_direction)
+	return g_y * chunks_per_direction + g_x
 
 # Returns true if a given chunk is already generated or being generated
 func is_chunk_active(x: int, y: int) -> bool:
@@ -182,7 +211,9 @@ func is_chunk_active(x: int, y: int) -> bool:
 
 func invalidate_all_chunks() -> void:
 	assert(OS.get_thread_caller_id() == OS.get_main_thread_id())
-	task_by_chunk_mesh = [null,null,null,null,null,null,null,null,null]
+	task_by_chunk_mesh = [null]
+	task_by_chunk_mesh.resize(chunk_meshes.size())
+	task_by_chunk_mesh.fill(null)
 
 # True integer modulo
 func imod(a: int, b: int) -> int:
@@ -331,19 +362,14 @@ class WorldGenTask:
 	func generate_height_map():
 		var height_map_scale: float = size / resolution
 		
-		var offset_x = grid_x * size
-		var offset_y = grid_y * size
-		
 		var map_resolution = resolution + 1
 		
 		var data = PackedFloat32Array()
 		data.resize(map_resolution * map_resolution)
 		
-		@warning_ignore("integer_division")
-		var half_res = (map_resolution) / 2
-		
 		for i:int in data.size():
 			var x = (i % map_resolution)
+			@warning_ignore("integer_division")
 			var y = (i / map_resolution)
 			
 			data[i] = get_height_data(x, y) / (height_map_scale)

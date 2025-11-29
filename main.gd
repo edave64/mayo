@@ -14,11 +14,10 @@ func _ready() -> void:
 	_on_terrain_generator_view_distance_changed($TerrainGenerator.view_distance)
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventKey:
-		if event.is_action_pressed("pause"):
-			$MainMenu.process_mode = Node.PROCESS_MODE_ALWAYS
-			$MainMenu.visible = true
-			get_tree().paused = true
+	if event.is_action_pressed("pause"):
+		$MainMenu.process_mode = Node.PROCESS_MODE_ALWAYS
+		$MainMenu.visible = true
+		get_tree().paused = true
 
 func _on_base_area_body_entered(body: Node3D) -> void:
 	if body == $Car:

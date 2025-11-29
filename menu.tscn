@@ -22,7 +22,8 @@ colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1)
 gradient = SubResource("Gradient_lti8b")
 
 [sub_resource type="Gradient" id="Gradient_mae5d"]
-colors = PackedColorArray(0.2509804, 0, 0, 1, 0, 0, 0, 0)
+interpolation_color_space = 2
+colors = PackedColorArray(0.49019608, 0.21960784, 0.3137255, 1, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_4hy44"]
 gradient = SubResource("Gradient_mae5d")
@@ -30,7 +31,8 @@ use_hdr = true
 fill_from = Vector2(0, 1)
 
 [sub_resource type="Gradient" id="Gradient_ytr4m"]
-colors = PackedColorArray(0, 0.2509804, 0, 1, 0, 0, 0, 0)
+interpolation_color_space = 2
+colors = PackedColorArray(0.40784314, 0.30980393, 0, 1, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_l48gv"]
 gradient = SubResource("Gradient_ytr4m")
@@ -38,8 +40,9 @@ use_hdr = true
 fill_to = Vector2(1, 1)
 
 [sub_resource type="Gradient" id="Gradient_ecwwl"]
-offsets = PackedFloat32Array(0.003058104, 1)
-colors = PackedColorArray(0, 0, 0.2509804, 1, 0, 0, 0, 0)
+interpolation_color_space = 2
+offsets = PackedFloat32Array(0.00952381, 1)
+colors = PackedColorArray(0, 0.39215687, 0.33333334, 1, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_kk3ma"]
 gradient = SubResource("Gradient_ecwwl")
@@ -48,7 +51,8 @@ fill_from = Vector2(1, 0)
 fill_to = Vector2(0, 1)
 
 [sub_resource type="Gradient" id="Gradient_4hy44"]
-colors = PackedColorArray(0.2509804, 0.1254902, 0, 1, 0, 0, 0, 0)
+interpolation_color_space = 2
+colors = PackedColorArray(0.23921569, 0.30588236, 0.5372549, 1, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_ytr4m"]
 gradient = SubResource("Gradient_4hy44")
@@ -72,22 +76,22 @@ mesh = SubResource("QuadMesh_4hy44")
 texture = SubResource("GradientTexture1D_ouk20")
 script = ExtResource("2_ouk20")
 
-[node name="R" type="MeshInstance2D" parent="Background"]
+[node name="P" type="MeshInstance2D" parent="Background"]
 scale = Vector2(1, 1.0000001)
 mesh = SubResource("QuadMesh_4hy44")
 texture = SubResource("GradientTexture2D_4hy44")
 
-[node name="G" type="MeshInstance2D" parent="Background"]
+[node name="Y" type="MeshInstance2D" parent="Background"]
 scale = Vector2(0.99999994, 1.0000001)
 mesh = SubResource("QuadMesh_4hy44")
 texture = SubResource("GradientTexture2D_l48gv")
 
-[node name="B" type="MeshInstance2D" parent="Background"]
+[node name="C" type="MeshInstance2D" parent="Background"]
 scale = Vector2(1, 1.0000001)
 mesh = SubResource("QuadMesh_4hy44")
 texture = SubResource("GradientTexture2D_kk3ma")
 
-[node name="O" type="MeshInstance2D" parent="Background"]
+[node name="B" type="MeshInstance2D" parent="Background"]
 scale = Vector2(1, 1.0000001)
 mesh = SubResource("QuadMesh_4hy44")
 texture = SubResource("GradientTexture2D_ytr4m")

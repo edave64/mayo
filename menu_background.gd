@@ -5,10 +5,10 @@ var color_corners: Array[CornerColor]
 func _ready() -> void:
 	_on_main_menu_resized()
 	color_corners = [
-		CornerColor.new($R),
-		CornerColor.new($G),
+		CornerColor.new($P),
+		CornerColor.new($Y),
+		CornerColor.new($C),
 		CornerColor.new($B),
-		CornerColor.new($O),
 	]
 
 func _process(delta: float) -> void:
@@ -24,10 +24,10 @@ func _on_main_menu_resized() -> void:
 class CornerColor:
 	enum State { BLANKING, FADEIN, HOLDING, FADEOUT }
 	const MAX_WAIT := {
-		State.BLANKING: 20,
-		State.FADEIN: 30,
-		State.HOLDING: 5,
-		State.FADEOUT: 30
+		State.BLANKING: 17,
+		State.FADEIN: 27,
+		State.HOLDING: 2,
+		State.FADEOUT: 27
 	}
 	
 	var mesh: MeshInstance2D
@@ -47,9 +47,9 @@ class CornerColor:
 		if progress > progress_max:
 			state = (state + 1) % 4 as State
 			progress = 0
-			progress_max = randf() * MAX_WAIT[state]
+			progress_max = 3 + randf() * MAX_WAIT[state]
 			if state == State.BLANKING:
-				intensity = 1 + (randf())
+				intensity = randf()
 		
 		var value: float
 		match state:

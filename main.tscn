@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://crtaqejenyjcq"]
+[gd_scene load_steps=29 format=3 uid="uid://crtaqejenyjcq"]
 
 [ext_resource type="Script" uid="uid://nagc7immjt45" path="res://camera_3d.gd" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://cvu3i8tqcnbng" path="res://main.gd" id="1_5vw27"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://wdr3xgoo5sb0" path="res://ui/fuel.svg" id="12_vivmo"]
 [ext_resource type="PackedScene" uid="uid://c741pa3qh66e5" path="res://menu.tscn" id="13_w48qg"]
 [ext_resource type="PackedScene" uid="uid://pms1ufr1gert" path="res://simple_plane.tscn" id="13_ycdy4"]
+[ext_resource type="Script" uid="uid://bpnve78rrw8ca" path="res://spawner.gd" id="15_yaehf"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_kek77"]
 noise_type = 0
@@ -80,35 +81,12 @@ as_normal_map = true
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_074og"]
 render_priority = 0
 shader = ExtResource("4_272bh")
-shader_parameter/height = 128.0
+shader_parameter/height = 64.0
 shader_parameter/color_gradient = SubResource("GradientTexture1D_2cqfq")
 shader_parameter/normal_map = SubResource("NoiseTexture2D_yaehf")
 
 [sub_resource type="LabelSettings" id="LabelSettings_w48qg"]
 font_color = Color(0, 0, 0, 1)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_cegan"]
-size = Vector3(4, 6, 4)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dg77c"]
-shading_mode = 2
-albedo_color = Color(0.11720761, 0.4259472, 0.22792351, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_2cqfq"]
-material = SubResource("StandardMaterial3D_dg77c")
-size = Vector3(4, 6, 4)
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_yaehf"]
-height = 11.5
-radius = 6.0
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w48qg"]
-shading_mode = 2
-albedo_color = Color(0.16964397, 0.29639035, 0.78626406, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_vivmo"]
-material = SubResource("StandardMaterial3D_w48qg")
-size = Vector3(4, 6, 4)
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_5vw27")
@@ -128,7 +106,7 @@ compositor = SubResource("Compositor_w48qg")
 transform = Transform3D(0.80696034, 0.4375234, -0.396722, 0, 0.67172056, 0.7408046, 0.5906057, -0.59779996, 0.54205185, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Pointer" type="MeshInstance3D" parent="." node_paths=PackedStringArray("tracking", "pointTowards")]
+[node name="Pointer" type="MeshInstance3D" parent="." node_paths=PackedStringArray("tracking")]
 transform = Transform3D(-1.0000001, -2.797529e-07, -1.7484552e-08, -8.742279e-08, -6.993823e-08, 0.19999999, -1.7484555e-07, 1.6, 8.742275e-09, 0, 3, 0)
 material_override = SubResource("StandardMaterial3D_ycdy4")
 cast_shadow = 0
@@ -136,7 +114,6 @@ ignore_occlusion_culling = true
 mesh = SubResource("PrismMesh_ycdy4")
 script = ExtResource("5_w48qg")
 tracking = NodePath("../Car")
-pointTowards = NodePath("../Base")
 
 [node name="Car" parent="." instance=ExtResource("9_kek77")]
 transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 1, 0)
@@ -148,6 +125,7 @@ script = ExtResource("5_kek77")
 tracking = NodePath("../Car")
 resolution = 16
 noise = SubResource("FastNoiseLite_272bh")
+height = 32
 material = SubResource("ShaderMaterial_074og")
 view_distance = 4
 
@@ -196,40 +174,6 @@ offset_bottom = 23.0
 text = "Pick up the pizza"
 label_settings = SubResource("LabelSettings_w48qg")
 
-[node name="Client" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -128, -8.300001, 185)
-disable_mode = 1
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Client"]
-shape = SubResource("BoxShape3D_cegan")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Client/CollisionShape3D"]
-mesh = SubResource("BoxMesh_2cqfq")
-skeleton = NodePath("../..")
-
-[node name="ClientArea" type="Area3D" parent="Client"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Client/ClientArea"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7499998, 0)
-shape = SubResource("CylinderShape3D_yaehf")
-
-[node name="Base" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.7, 0)
-disable_mode = 1
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Base"]
-shape = SubResource("BoxShape3D_cegan")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Base/CollisionShape3D"]
-mesh = SubResource("BoxMesh_vivmo")
-skeleton = NodePath("../../..")
-
-[node name="BaseArea" type="Area3D" parent="Base"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Base/BaseArea"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7499998, 0)
-shape = SubResource("CylinderShape3D_yaehf")
-
 [node name="SimplePlane" parent="." instance=ExtResource("13_ycdy4")]
 process_mode = 4
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 3, 0)
@@ -239,8 +183,17 @@ visible = false
 process_mode = 4
 visible = false
 
+[node name="BaseSpawner" type="Node3D" parent="."]
+script = ExtResource("15_yaehf")
+locations = PackedVector2Array(-12, 0)
+names = PackedStringArray("Base")
+
+[node name="ClientSpawner" type="Node3D" parent="."]
+script = ExtResource("15_yaehf")
+locations = PackedVector2Array(-128, 185)
+names = PackedStringArray("Valley Dude")
+type = 1
+
 [connection signal="view_distance_changed" from="TerrainGenerator" to="." method="_on_terrain_generator_view_distance_changed"]
-[connection signal="body_entered" from="Client/ClientArea" to="." method="_on_client_area_body_entered"]
-[connection signal="body_entered" from="Base/BaseArea" to="." method="_on_base_area_body_entered"]
 [connection signal="continue_game" from="MainMenu" to="." method="_on_main_menu_continue_game"]
 [connection signal="terrain_detail_change" from="MainMenu" to="." method="_on_main_menu_terrain_detail_change"]

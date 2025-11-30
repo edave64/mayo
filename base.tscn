@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://cq0abq75v7i5i"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cegan"]
+size = Vector3(4, 6, 4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w48qg"]
+shading_mode = 2
+albedo_color = Color(0.16964397, 0.29639035, 0.78626406, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vivmo"]
+material = SubResource("StandardMaterial3D_w48qg")
+size = Vector3(4, 6, 4)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_yaehf"]
+height = 11.5
+radius = 6.0
+
+[node name="Base" type="StaticBody3D"]
+disable_mode = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_cegan")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
+mesh = SubResource("BoxMesh_vivmo")
+skeleton = NodePath("../../..")
+
+[node name="BaseArea" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BaseArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7499998, 0)
+shape = SubResource("CylinderShape3D_yaehf")
